@@ -8,8 +8,13 @@
 #   - corre ANTES do profiler; depois disso nao ha mais acesso a rede
 set -euo pipefail
 
+# IMPORTANTE: aponta para o NOSSO modelo, nao para a base.
+# A diferenca nao e cosmetica: a base tem o raciocinio ligado por omissao e,
+# corrida sem parametros especiais como um juiz a corre, devolve resposta VAZIA
+# depois de gastar o orcamento de tokens a pensar em ingles. Este ficheiro tem o
+# template corrigido nos metadados, por isso responde em qualquer runtime.
 DEST="model/ondjila-Q4_K_M.gguf"
-URL="${ONDJILA_MODEL_URL:-https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf}"
+URL="${ONDJILA_MODEL_URL:-https://github.com/dimittri1/ondjila/releases/download/v0.1.0-model/ondjila-Q4_K_M.gguf}"
 SHA256="${ONDJILA_MODEL_SHA256:-}"
 
 mkdir -p model
