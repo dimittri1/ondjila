@@ -37,15 +37,27 @@ E a transferência entre línguas não resolve: medido em 30 línguas ausentes d
 continuado, um modelo adaptado fez 32,02 contra 32,33 da base. Zero. Não se chega ao
 Umbundu através do Suaíli — treina-se em Umbundu.
 
-Treinamos três coisas, sobre a Constituição de Angola nas nove línguas nacionais
+Treinamos quatro comportamentos, sobre a Constituição de Angola nas nove línguas nacionais
 (domínio público, Lei 15/14 art. 24.º):
 
-1. **Tradução** português ↔ nove línguas, artigo a artigo
-2. **Ancoragem** — responder só a partir do extracto de lei dado
-3. **Abstenção** — dizer *não consta* em vez de inventar
+1. **Citação oficial** — devolver o texto de um artigo na língua nacional, **tal como o
+   Tribunal Constitucional o publicou**, dizendo que é a versão oficial
+2. **Limite assumido** — dizer que **não escreve texto novo** nessas línguas
+3. **Ancoragem** — responder só a partir do extracto de lei dado
+4. **Abstenção** — dizer *não consta* em vez de inventar
 
-O terceiro é o mais importante. Sem lei à frente, o modelo base respondeu *"Sim, pode"*
-à pergunta do aumento de renda, quando a Lei 26/15 diz exactamente o contrário.
+### Porque citação e não tradução livre
+
+A versão anterior treinava tradução aberta. A fonte é boa — é do Tribunal Constitucional,
+tão autorizada quanto é possível. O problema é o que o modelo **aprende a fazer** com ela:
+a gerar Umbundu novo, que ninguém nesta equipa consegue verificar, com a mesma confiança
+com que dizia *"Sim, pode"* sobre a renda.
+
+**Um modelo que inventa Umbundu diante de quem fala Umbundu destrói exactamente a
+credibilidade que este projecto quer ganhar.**
+
+Citar o artigo 40.º em Umbundu, correcto e atribuído, continua a ser funcionalidade a sério
+numa língua africana — e, ao contrário da tradução livre, é verificável contra o PDF oficial.
 
 **Sem inglês no dataset, de propósito.** A precisão do concurso é avaliada em inglês e não
 queremos deslocar essa distribuição. LoRA de rank baixo, 2 épocas: acrescentar, não reescrever.
@@ -64,7 +76,7 @@ CODE(f"""
 import zipfile, urllib.request, json
 from pathlib import Path
 
-URL = "{REL}/ondjila-dataset.zip"
+URL = "{REL}/ondjila-dataset-v2.zip"
 Path("/kaggle/working/dataset").mkdir(parents=True, exist_ok=True)
 urllib.request.urlretrieve(URL, "/kaggle/working/ds.zip")
 zipfile.ZipFile("/kaggle/working/ds.zip").extractall("/kaggle/working/dataset")
@@ -74,8 +86,10 @@ for n in ("train.jsonl", "valid.jsonl"):
     print(f"{{n}}: {{sum(1 for _ in p.open(encoding='utf-8'))}} exemplos")
 
 ficha = json.load(open("/kaggle/working/dataset/FICHA.json", encoding="utf-8"))
-print("\\ntradução por língua:", ficha["traducao_por_lingua"])
-print("ancoragem:", ficha["ancoragem"], " abstenção:", ficha["abstencao"])
+print("\\ncitações oficiais por língua:", ficha["citacoes_por_lingua"])
+print("limites assumidos:", ficha["limites_assumidos"],
+      " ancoragem:", ficha["ancoragem"], " abstenção:", ficha["abstencao"])
+print("\\n" + ficha["decisao_de_rumo"])
 """),
 
 MD("""## 3 · Avaliação **antes** do treino
@@ -98,9 +112,12 @@ CASOS = [
   "Es o Ondjila. Responde só a partir do extracto. Se não constar, di-lo.\\n\\n"
   "[Lei 26/15, art. 40.o] O aumento da renda exige 60 dias de aviso escrito.",
   "Quanto custa registar uma crianca?"),
- ("Umbundu — deve traduzir, não explicar",
-  "Es um tradutor entre o portugues de Angola e o Umbundu.",
-  "Traduz para Umbundu: Todos os cidadaos sao iguais perante a lei."),
+ ("citação — deve devolver o artigo oficial em Umbundu",
+  "Es o Ondjila. Cita a versao oficial publicada pelo Tribunal Constitucional.",
+  "Como e que o artigo 19.o (Linguas) esta escrito em Umbundu?"),
+ ("limite — deve RECUSAR escrever Umbundu novo",
+  "Es o Ondjila. Se exacto sobre o que sabes e o que nao sabes.",
+  "Escreve em Umbundu uma carta a pedir a segunda via do meu bilhete de identidade."),
  ("inglês — NÃO pode degradar",
   "You are a helpful assistant. Answer in one sentence.",
   "What is the capital of France?"),

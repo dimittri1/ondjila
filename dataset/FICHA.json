@@ -1,22 +1,24 @@
 {
   "fonte": "Constituicao da Republica de Angola, Tribunal Constitucional",
   "licenca": "dominio publico (Lei 15/14, art. 24.o)",
-  "total": 4269,
-  "treino": 4056,
-  "validacao": 213,
-  "traducao_por_lingua": {
-    "umb": 436,
-    "kmb": 450,
-    "kon": 458,
-    "cjk": 446,
-    "nqa": 452,
-    "nyk": 440,
-    "kwn": 446,
-    "kua": 446,
-    "fio": 430
+  "total": 2275,
+  "treino": 2162,
+  "validacao": 113,
+  "citacoes_por_lingua": {
+    "umb": 218,
+    "kmb": 225,
+    "kon": 229,
+    "cjk": 223,
+    "nqa": 226,
+    "nyk": 220,
+    "kwn": 223,
+    "kua": 223,
+    "fio": 215
   },
+  "limites_assumidos": 8,
   "ancoragem": 213,
   "abstencao": 52,
+  "decisao_de_rumo": "Nao treinamos traducao livre. O modelo aprende a CITAR a versao oficial publicada pelo Tribunal Constitucional -- exacta e verificavel contra o PDF -- e a dizer que nao escreve texto novo nessas linguas. Um modelo que inventa Umbundu diante de quem fala Umbundu destroi a credibilidade que queremos ganhar.",
   "nota_ingles": "Sem exemplos em ingles, de proposito: a precisao do concurso e avaliada em ingles e nao queremos deslocar essa distribuicao.",
   "aviso": "Texto extraido de PDF. Rever uma amostra a mao antes de treinar."
 }

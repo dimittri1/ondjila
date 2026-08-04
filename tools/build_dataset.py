@@ -145,8 +145,27 @@ def main() -> int:
     por = artigos["por"]
     exemplos: list[dict] = []
 
-    # ---------- A) traducao paralela ----------
-    print("\n[2] pares de traducao alinhados ao portugues")
+    # ---------- A) citacao oficial, nao traducao livre ----------
+    #
+    # MUDANCA DE RUMO, e e a decisao mais importante deste ficheiro.
+    #
+    # A versao anterior treinava traducao livre pt <-> nove linguas. O problema
+    # nao e a fonte -- os textos sao do Tribunal Constitucional, tao autorizados
+    # quanto e possivel ser. O problema e o que o modelo APRENDE a fazer com
+    # eles: a gerar Umbundu novo, que ninguem nesta equipa consegue verificar, e
+    # a faze-lo com a mesma confianca com que dizia "Sim, pode" sobre a renda.
+    #
+    # Um modelo que inventa Umbundu diante de quem fala Umbundu destroi
+    # exactamente a credibilidade que o projecto quer ganhar.
+    #
+    # Por isso: o modelo aprende a CITAR o texto oficial de um artigo -- que e
+    # exacto e verificavel contra o PDF do tribunal -- e a dizer com todas as
+    # letras que o e. Nao aprende a inventar frases novas.
+    #
+    # Isto continua a cumprir "funcionalidade significativa numa lingua africana":
+    # devolver o artigo 40.o da Constituicao em Umbundu, correcto e atribuido, e
+    # funcionalidade a serio. E, ao contrario da traducao livre, e defensavel.
+    print("\n[2] citacoes oficiais (texto do tribunal, nao traducao gerada)")
     pares_por_lingua: dict[str, int] = {}
     for code in NOME:
         if code == "por" or code not in artigos:
@@ -155,21 +174,39 @@ def main() -> int:
         n = 0
         for num in comuns:
             a_pt, a_xx = por[num], artigos[code][num]
-            # Descarta pares com razao de tamanho absurda: sinal de desalinhamento.
             r = len(a_xx["corpo"]) / max(len(a_pt["corpo"]), 1)
-            if not (0.45 <= r <= 2.2):
+            if not (0.45 <= r <= 2.2):     # razao absurda = desalinhamento
                 continue
             exemplos.append(msg(
-                f"Es um tradutor entre o português de Angola e o {NOME[code]}. Traduz com fidelidade, sem acrescentar nem omitir.",
-                f"Traduz para {NOME[code]}:\n\n{a_pt['corpo']}",
-                a_xx["corpo"]))
-            exemplos.append(msg(
-                f"Es um tradutor entre o {NOME[code]} e o português de Angola. Traduz com fidelidade, sem acrescentar nem omitir.",
-                f"Traduz para português:\n\n{a_xx['corpo']}",
-                a_pt["corpo"]))
-            n += 2
+                f"Es o Ondjila, um assistente offline em Angola. Quando te pedirem um artigo da "
+                f"Constituição numa língua nacional, cita a versão oficial publicada pelo Tribunal "
+                f"Constitucional e diz que é a versão oficial. Nunca inventes texto nessa língua.",
+                f"Como é que o artigo {num}.º ({a_pt['titulo']}) está escrito em {NOME[code]}?",
+                f"Esta é a versão oficial do artigo {num}.º em {NOME[code]}, publicada pelo "
+                f"Tribunal Constitucional de Angola:\n\n{a_xx['corpo']}"))
+            n += 1
         pares_por_lingua[code] = n
-        print(f"    {code}  {NOME[code]:<14} {n:>4} exemplos  (de {len(comuns)} artigos comuns)")
+        print(f"    {code}  {NOME[code]:<14} {n:>4} citacoes  (de {len(comuns)} artigos comuns)")
+
+    # ---------- A2) limites da lingua, ditos em voz alta ----------
+    print("\n[2b] honestidade linguistica")
+    n_lim = 0
+    for code in ("umb", "kmb", "kon", "cjk"):
+        if code not in artigos:
+            continue
+        for pedido in (
+            f"Escreve em {NOME[code]} uma carta a pedir a segunda via do meu bilhete de identidade.",
+            f"Traduz para {NOME[code]}: o senhorio tem de avisar com 60 dias de antecedência.",
+        ):
+            exemplos.append(msg(
+                "Es o Ondjila. Sê exacto sobre o que sabes e o que não sabes. Não uses asteriscos.",
+                pedido,
+                f"Não escrevo texto novo em {NOME[code]}. O que tenho é a Constituição da República "
+                f"de Angola na versão oficial em {NOME[code]}, publicada pelo Tribunal Constitucional, "
+                f"e posso citar qualquer artigo dela. Para textos novos, posso explicar-lhe tudo em "
+                f"português e procurar quem faça a tradução em condições."))
+            n_lim += 1
+    print(f"    {n_lim} exemplos de limite assumido")
 
     # ---------- B) ancoragem ----------
     print("\n[3] exemplos de ancoragem (responder so a partir do extracto)")
@@ -237,9 +274,16 @@ def main() -> int:
         "total": len(exemplos),
         "treino": len(treino),
         "validacao": len(val),
-        "traducao_por_lingua": pares_por_lingua,
+        "citacoes_por_lingua": pares_por_lingua,
+        "limites_assumidos": n_lim,
         "ancoragem": n_anc,
         "abstencao": n_abs,
+        "decisao_de_rumo": (
+            "Nao treinamos traducao livre. O modelo aprende a CITAR a versao oficial "
+            "publicada pelo Tribunal Constitucional -- exacta e verificavel contra o PDF -- "
+            "e a dizer que nao escreve texto novo nessas linguas. Um modelo que inventa "
+            "Umbundu diante de quem fala Umbundu destroi a credibilidade que queremos ganhar."
+        ),
         "nota_ingles": "Sem exemplos em ingles, de proposito: a precisao do concurso e avaliada em ingles e nao queremos deslocar essa distribuicao.",
         "aviso": "Texto extraido de PDF. Rever uma amostra a mao antes de treinar.",
     }, ensure_ascii=False, indent=2), encoding="utf-8")
