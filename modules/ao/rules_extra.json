@@ -1,0 +1,168 @@
+{
+  "_nota": "Segunda tranche de regras, para fechar os modulos que ficaram sem cobertura. A auditoria apanhou 5 modulos sem regra nenhuma e 16 perguntas de exemplo orfas -- nesses casos o modelo respondia SEM lei a frente, que foi exactamente como disse 'Sim, pode' sobre o aumento da renda.",
+  "_campo_tipo": "disposicao = transcreve o que a lei estabelece. orientacao = encaminhamento procedimental, quando nao ha uma disposicao concreta a citar. A distincao vai na resposta ao utilizador, para que ele saiba o peso do que esta a ler.",
+  "rules": [
+    {
+      "id": "jus.apoio_judiciario",
+      "module": "ao.justica",
+      "tipo": "disposicao",
+      "title": "Apoio judiciário para quem não pode pagar advogado",
+      "text": "Quem não tem meios para suportar os encargos de um processo tem direito a apoio judiciário. Há porém uma limitação que importa conhecer: o apoio é concedido pelo juiz da causa, como incidente dentro do processo. Na prática, isto significa que só ajuda quem já conseguiu chegar a tribunal, e não quem ainda não conseguiu lá entrar. Quem ainda não tem processo aberto deve procurar a Ordem dos Advogados de Angola, os serviços do Ministério da Justiça e dos Direitos Humanos, ou uma organização de apoio jurídico.",
+      "source": "Decreto-Lei 15/95 (Apoio Judiciário), art. 10.º",
+      "keywords": ["advogado", "pagar advogado", "apoio judiciario", "apoio judiciário", "processo", "tribunal", "custas", "nao posso pagar", "não posso pagar", "sem dinheiro"]
+    },
+    {
+      "id": "jus.onde_apresentar",
+      "module": "ao.justica",
+      "tipo": "orientacao",
+      "title": "Onde apresentar uma queixa",
+      "text": "A queixa-crime apresenta-se junto do Ministério Público ou de qualquer esquadra da Polícia Nacional, que a encaminha. Para questões cíveis e de família, o tribunal competente é o da área de residência do requerido. Angola tem cerca de 40 tribunais de comarca para 164 municípios, pelo que o tribunal competente é muitas vezes noutro município: confirme onde fica antes de viajar, e leve o bilhete de identidade e todos os documentos que tenha sobre o caso.",
+      "source": "Orientação procedimental. Não substitui aconselhamento jurídico.",
+      "keywords": ["queixa", "onde apresentar", "que tribunal", "qual tribunal", "comarca", "ministerio publico", "ministério público", "esquadra", "denunciar"]
+    },
+    {
+      "id": "jus.detencao",
+      "module": "ao.justica",
+      "tipo": "disposicao",
+      "title": "Detenção e direitos do detido",
+      "text": "Ninguém pode ser privado da liberdade a não ser nos casos previstos na lei. O detido tem direito a ser informado das razões da detenção, a guardar silêncio, a constituir advogado e a comunicar com um familiar. A detenção sem culpa formada tem prazos máximos fixados na lei. Quem tenha sido detido fora destes termos pode reclamar junto do Ministério Público e, se houver dano, pedir responsabilização do Estado.",
+      "source": "Constituição da República de Angola, arts. 36.º e 63.º",
+      "keywords": ["detido", "detencao", "detenção", "preso", "policia", "polícia", "libertado", "prender", "reclamar", "liberdade"]
+    },
+    {
+      "id": "sau.gratuitidade",
+      "module": "ao.saude",
+      "tipo": "disposicao",
+      "title": "Cuidados de saúde na rede pública",
+      "text": "A assistência médica e medicamentosa nos serviços públicos de saúde é tendencialmente gratuita, nos termos definidos na lei. A cobrança de valores por uma consulta que a lei estabelece como gratuita não tem fundamento e deve ser comunicada à direcção da unidade sanitária e à direcção provincial de saúde. Guarde qualquer comprovativo de pagamento que lhe tenham dado.",
+      "source": "Lei 21-B/92 (Bases do Sistema Nacional de Saúde) · Constituição, art. 77.º",
+      "keywords": ["hospital", "consulta", "gratuita", "gratuito", "pediu dinheiro", "cobrou", "pagar", "medico", "médico", "saude", "saúde", "unidade sanitaria"]
+    },
+    {
+      "id": "sau.parto",
+      "module": "ao.saude",
+      "tipo": "disposicao",
+      "title": "Assistência no parto",
+      "text": "A maternidade e a infância têm protecção especial do Estado. A assistência no parto na rede pública integra o acompanhamento pré-natal, a assistência ao parto e os cuidados ao recém-nascido. O registo de nascimento pode e deve ser feito na própria unidade onde ocorreu o parto, quando ela dispuser de posto de registo, o que evita uma deslocação posterior à conservatória.",
+      "source": "Constituição, art. 80.º · Lei 21-B/92",
+      "keywords": ["parto", "gravida", "grávida", "maternidade", "bebe", "bebé", "nascer", "recem-nascido", "recém-nascido", "pre-natal", "pré-natal"]
+    },
+    {
+      "id": "sau.transferencia",
+      "module": "ao.saude",
+      "tipo": "orientacao",
+      "title": "Transferência entre unidades de saúde",
+      "text": "A transferência de um doente para uma unidade de nível superior faz-se por referência clínica emitida pela unidade de origem. É essa referência que abre o acesso, e não a iniciativa da família. O transporte nem sempre está garantido: pergunte expressamente na unidade de origem se existe transporte assegurado ou apoio para o mesmo, e peça a resposta por escrito na guia de transferência.",
+      "source": "Orientação procedimental. Confirme junto da direcção provincial de saúde.",
+      "keywords": ["transferir", "transferencia", "transferência", "luanda", "transporte", "ambulancia", "ambulância", "quem paga", "levar"]
+    },
+    {
+      "id": "ss.pensao_velhice",
+      "module": "ao.seguranca_social",
+      "tipo": "disposicao",
+      "title": "Pensão de velhice",
+      "text": "A pensão de velhice depende de dois requisitos cumulativos: a idade legal de reforma e um período mínimo de contribuições para a Protecção Social Obrigatória. O tempo de trabalho só conta se tiver havido inscrição e desconto — trabalho não declarado não gera direito a pensão. Peça ao Instituto Nacional de Segurança Social o extracto da sua carreira contributiva: é esse documento que mostra quantos anos lhe estão efectivamente registados.",
+      "source": "Lei 7/04 (Protecção Social Obrigatória)",
+      "keywords": ["pensao", "pensão", "velhice", "reforma", "reformar", "aposentar", "vinte anos", "anos de trabalho", "inss", "carreira"]
+    },
+    {
+      "id": "ss.sobrevivencia",
+      "module": "ao.seguranca_social",
+      "tipo": "disposicao",
+      "title": "Pensão de sobrevivência",
+      "text": "Por morte de um beneficiário inscrito, o cônjuge sobrevivo e os filhos menores podem ter direito a pensão de sobrevivência. O direito depende de o falecido ter tido inscrição e contribuições. São normalmente exigidos a certidão de óbito, a prova do vínculo — certidão de casamento ou de nascimento dos filhos — e o número de segurança social do falecido. O pedido faz-se junto do Instituto Nacional de Segurança Social.",
+      "source": "Lei 7/04 (Protecção Social Obrigatória)",
+      "keywords": ["morreu", "faleceu", "viuva", "viúva", "sobrevivencia", "sobrevivência", "marido", "esposa", "conjuge", "cônjuge", "inss", "receber"]
+    },
+    {
+      "id": "ss.trabalhador_conta_propria",
+      "module": "ao.seguranca_social",
+      "tipo": "disposicao",
+      "title": "Inscrição de quem trabalha por conta própria",
+      "text": "Quem trabalha por conta própria, incluindo o comércio informal, pode inscrever-se voluntariamente na Protecção Social Obrigatória e passar a contribuir. A inscrição é o que transforma anos de trabalho em direito a pensão: sem ela, o tempo trabalhado não conta. Faz-se junto do Instituto Nacional de Segurança Social, com bilhete de identidade e número de identificação fiscal.",
+      "source": "Lei 7/04 (Protecção Social Obrigatória)",
+      "keywords": ["conta propria", "conta própria", "vendedora", "vendedor", "mercado", "informal", "inscrever", "inscricao", "inscrição", "zungueira", "negocio proprio"]
+    },
+    {
+      "id": "neg.actividade",
+      "module": "ao.negocio",
+      "tipo": "orientacao",
+      "title": "Legalizar uma actividade pequena",
+      "text": "Para exercer uma actividade económica de forma legal são normalmente necessários o número de identificação fiscal, o início de actividade junto da Administração Geral Tributária, e a licença da administração municipal quando a actividade exija espaço ou local fixo. Para actividades muito pequenas existem regimes simplificados. Comece pela repartição fiscal da sua área: é lá que se confirma o que se aplica ao seu caso concreto.",
+      "source": "Lei 30/11 (Micro, Pequenas e Médias Empresas). Orientação procedimental.",
+      "keywords": ["negocio", "negócio", "legalizar", "abrir", "loja", "vender", "rua", "actividade", "licenca", "licença", "nif", "empresa", "empregados"]
+    },
+    {
+      "id": "neg.factura_electronica",
+      "module": "ao.negocio",
+      "tipo": "disposicao",
+      "title": "Factura electrónica",
+      "text": "A facturação electrónica é obrigatória em Angola de forma faseada. Os grandes contribuintes entraram na primeira fase e os restantes na fase seguinte, pelo que a data que lhe aplica depende do seu enquadramento fiscal. Confirme o seu na Administração Geral Tributária antes de investir em software. Se a sua zona tiver ligação instável, pergunte expressamente à AGT que procedimento seguir quando não houver rede no momento da emissão.",
+      "source": "Decreto Presidencial 71/25",
+      "keywords": ["factura", "fatura", "electronica", "eletronica", "eletrónica", "agt", "imposto", "fiscal", "obrigatorio", "obrigatório", "internet"]
+    },
+    {
+      "id": "her.quem_herda",
+      "module": "ao.heranca",
+      "tipo": "disposicao",
+      "title": "Quem herda",
+      "text": "Na sucessão sem testamento, são chamados em primeiro lugar o cônjuge e os descendentes. Não havendo descendentes, são chamados o cônjuge e os ascendentes. Os filhos herdam em partes iguais, independentemente de serem nascidos dentro ou fora do casamento. Nenhum herdeiro pode ficar com um bem comum contra a vontade dos restantes: a partilha faz-se por acordo entre todos ou, não o havendo, por via judicial.",
+      "source": "Código Civil, Livro V (Direito das Sucessões)",
+      "keywords": ["herdar", "heranca", "herança", "herdeiro", "morreu", "pai", "mae", "mãe", "irmaos", "irmãos", "casa", "partilha", "dividir"]
+    },
+    {
+      "id": "her.uniao_de_facto",
+      "module": "ao.heranca",
+      "tipo": "disposicao",
+      "title": "União de facto e sucessão",
+      "text": "A união de facto reconhecida produz efeitos próximos dos do casamento, incluindo em matéria sucessória. O ponto decisivo é o reconhecimento: quem viveu em união de facto e quer fazer valer direitos sucessórios precisa de o provar, por reconhecimento judicial ou pelos meios que a lei da família admite. Sem esse reconhecimento, a companheira ou companheiro sobrevivo fica em posição muito mais frágil perante os restantes herdeiros.",
+      "source": "Lei 1/88 (Código da Família)",
+      "keywords": ["uniao de facto", "união de facto", "companheiro", "companheira", "sem casar", "vivi com", "anos com", "nao casamos", "juntos"]
+    },
+    {
+      "id": "her.documentos",
+      "module": "ao.heranca",
+      "tipo": "orientacao",
+      "title": "Documentos para uma partilha",
+      "text": "Uma partilha exige normalmente a certidão de óbito do falecido, o bilhete de identidade de cada herdeiro, a prova do vínculo de cada um — certidão de nascimento ou de casamento — e os títulos dos bens a partilhar. Se algum herdeiro não tiver bilhete de identidade, esse é o primeiro problema a resolver, porque bloqueia o processo inteiro.",
+      "source": "Orientação procedimental. Confirme junto do cartório notarial ou do tribunal.",
+      "keywords": ["documentos", "papeis", "papéis", "partilha", "comecar", "começar", "cartorio", "cartório", "notario", "notário", "certidao", "certidão"]
+    },
+    {
+      "id": "ter.limites",
+      "module": "ao.terra",
+      "tipo": "orientacao",
+      "title": "Conflito de limites de terreno",
+      "text": "Quando um vizinho altera os limites de um terreno, o caminho começa pela autoridade tradicional e pela administração comunal ou municipal, que registam a ocorrência e podem promover a demarcação. Se não houver acordo, a questão segue para tribunal. Reúna desde já o que puder: testemunhas que conheçam os limites antigos, qualquer documento sobre a ocupação, e fotografias com data.",
+      "source": "Lei 9/04 (Lei de Terras). Orientação procedimental.",
+      "keywords": ["vizinho", "limites", "mudou", "terreno", "invadiu", "conflito", "demarcacao", "demarcação", "soba", "autoridade tradicional"]
+    },
+    {
+      "id": "esc.transferencia",
+      "module": "ao.escola",
+      "tipo": "orientacao",
+      "title": "Transferência de escola",
+      "text": "A transferência de aluno entre escolas faz-se com a guia de transferência emitida pela escola de origem, acompanhada do certificado de habilitações ou da ficha de avaliação do ano em curso. Peça a guia antes de sair da província: obtê-la à distância é bastante mais difícil. A escola de destino não pode recusar a matrícula com base apenas na mudança de província.",
+      "source": "Lei 17/16 (Bases do Sistema de Educação). Orientação procedimental.",
+      "keywords": ["transferir", "transferencia", "transferência", "mudamos", "mudámos", "provincia", "província", "outra escola", "meio do ano", "filho"]
+    },
+    {
+      "id": "trab.ferias",
+      "module": "ao.trabalho",
+      "tipo": "disposicao",
+      "title": "Direito a férias",
+      "text": "O trabalhador tem direito a período anual de férias remuneradas, que não pode ser substituído por dinheiro salvo nos casos que a lei permite, nomeadamente quando o contrato cessa antes de as férias serem gozadas. As férias não gozadas devem ser pagas no acerto final de contas. Guarde os recibos de vencimento: são a prova de quanto lhe é devido.",
+      "source": "Lei 7/15 (Lei Geral do Trabalho)",
+      "keywords": ["ferias", "férias", "descanso", "gozar", "nao gozei", "não gozei", "pagar ferias", "acerto"]
+    },
+    {
+      "id": "cons.servico_nao_prestado",
+      "module": "ao.consumidor",
+      "tipo": "disposicao",
+      "title": "Serviço pago e não prestado",
+      "text": "Quem pagou por um serviço que não foi prestado tem direito à devolução do valor pago. A reclamação apresenta-se primeiro ao próprio fornecedor, por escrito e com pedido de resposta, e depois junto do Instituto Nacional de Defesa do Consumidor. Guarde o comprovativo de pagamento e qualquer troca de mensagens: é isso que sustenta a reclamação.",
+      "source": "Lei 15/03 (Defesa do Consumidor)",
+      "keywords": ["paguei", "adiantado", "nao entregaram", "não entregaram", "servico", "serviço", "devolver", "devolucao", "devolução", "reclamar"]
+    }
+  ]
+}

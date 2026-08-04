@@ -26,3 +26,5 @@ verdict.json
 corpus/pdf/
 corpus/raw/
 dataset/*.jsonl
+
+dataset/*.zip

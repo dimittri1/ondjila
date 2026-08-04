@@ -62,12 +62,19 @@ def _norm(s: str) -> str:
 
 
 def load_rules() -> list[dict]:
-    if not RULES_PATH.exists():
-        return []
-    try:
-        return json.loads(RULES_PATH.read_text(encoding="utf-8")).get("rules", [])
-    except Exception:
-        return []
+    """Junta todos os ficheiros rules*.json do modulo.
+
+    Ficam separados de proposito: rules.json foi a primeira tranche e
+    rules_extra.json fechou os modulos que a auditoria apanhou sem cobertura.
+    Manter o historico visivel vale mais do que ter um ficheiro so.
+    """
+    regras: list[dict] = []
+    for p in sorted(RULES_PATH.parent.glob("rules*.json")):
+        try:
+            regras.extend(json.loads(p.read_text(encoding="utf-8")).get("rules", []))
+        except Exception:
+            continue
+    return regras
 
 
 def retrieve(module_id: str, question: str, k: int = 2) -> list[dict]:
