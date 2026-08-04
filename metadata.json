@@ -3,8 +3,8 @@
   "team_id": "ondjila",
   "submitter": {
     "name": "Augusto Bernardo Lopes",
-    "email": "PREENCHER-ANTES-DE-SUBMETER@exemplo.ao",
-    "github_handle": "PREENCHER-ANTES-DE-SUBMETER"
+    "email": "andrepitra@gmail.com",
+    "github_handle": "dimittri1"
   },
   "domain": "autonomous_ai_agents",
   "model": {
@@ -28,7 +28,7 @@
     "model_path": "model/ondjila-Q4_K_M.gguf"
   },
   "_notas_para_nos": {
-    "team_id": "TEM de ser igual ao slug do projecto no Devpost. Confirmar antes de submeter.",
+    "team_id": "FALTA CONFIRMAR. Um organizador esclareceu no forum que team_id = o ID do PROJECTO no Devpost, mesmo para quem concorre sozinho. E o fim do endereco da pagina do projecto: devpost.com/software/<isto-aqui>. Copiar de la e substituir acima.",
     "test_prompts": "Exactamente 2. Os organizadores geram mais 2 ocultos no mesmo dominio para detectar overfitting. Os 4 contam para a nota.",
     "modelo": "Neste momento e a base Qwen3.5-2B. O FAQ permite explicitamente partir de um modelo aberto. O fine-tuning em Umbundu e o passo seguinte e sobe a reclamacao do bonus de lingua africana.",
     "parameters_estimate": "O profiler le o cabecalho do GGUF e compara com este valor, com tolerancia de +-15%. Confirmar depois de quantizar."
