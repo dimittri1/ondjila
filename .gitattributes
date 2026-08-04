@@ -1,0 +1,8 @@
+# Os .sh correm em Linux. CRLF parte-os: 'set: pipefail: invalid option name'.
+*.sh   text eol=lf
+*.py   text eol=lf
+*.json text eol=lf
+*.gguf binary
+*.png  binary
+*.pdf  binary
+*.zip  binary

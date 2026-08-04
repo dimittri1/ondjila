@@ -77,7 +77,10 @@ fi
 sec "6. Corpus legal"
 python3 - <<'PY'
 import json
-r = json.load(open("modules/ao/rules.json"))["rules"]
+from pathlib import Path as _P
+r = []
+for _f in sorted(_P("modules/ao").glob("rules*.json")):
+    r.extend(json.load(open(_f, encoding="utf-8"))["rules"])
 print(f"  [ OK ]   regras carregadas: {len(r)}")
 faltam = [x["id"] for x in r if not x.get("source") or not x.get("text")]
 print(f"  [ OK ]   todas com fonte e texto") if not faltam else print(f"  [FALHA]  sem fonte/texto: {faltam}")

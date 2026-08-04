@@ -162,6 +162,14 @@ machine.
   pretraining, an adapted model scored 32.02 against a 32.33 baseline.
 - What makes it tractable: **Angola's Constitutional Court publishes the Constitution in nine national
   languages**, a human-authored public-domain parallel corpus in exactly this project's domain.
-- The legal corpus currently covers 15 rules across 7 modules. Retrieval is keyword-based — deliberately
-  auditable and reproducible at this stage rather than subtle.
+- The legal corpus covers **33 rules across all 12 modules**. Retrieval is keyword-based —
+  deliberately auditable and reproducible at this stage rather than subtle. Each rule is tagged
+  either *disposição* (it transcribes what the law establishes) or *orientação* (procedural guidance
+  where no specific provision can be cited), and that distinction is surfaced to the user.
+- A coherence audit (`tools/auditar.py`) caught the failure mode this project exists to prevent,
+  inside the product itself: five modules had no legal rule at all, so the model answered with
+  nothing in front of it. Asked about legal aid, it replied *"go to the court's website, click the
+  help button"* — inventing a website in a country where `portaldocidadao.gov.ao` has no DNS record.
+  With the rule present, the same question now surfaces the constraint that matters: legal aid is
+  granted by the judge of the case, so it only helps someone who already reached court.
 - This is not ready to be used by the people it is written for.

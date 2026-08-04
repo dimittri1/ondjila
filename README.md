@@ -120,7 +120,22 @@ months over a payment dispute with a supplier.
 
 ## Language
 
-Portuguese first, with Umbundu as the first minority language.
+Portuguese first. For Angola's national languages the model **cites, it does not translate.**
+
+Asked how article 40 reads in Umbundu, it returns the text exactly as the Constitutional Court
+published it, and says so. Asked to write something *new* in Umbundu, it declines and offers to
+explain in Portuguese instead.
+
+That constraint is deliberate. An earlier version trained open translation across all nine
+languages. The source was never the problem — it is the Constitutional Court, about as
+authoritative as a source gets. The problem was what the model would learn to *do* with it:
+generate new Umbundu that nobody on this project can verify, with the same confidence it used to
+say *"yes, he can"* about the rent increase.
+
+**A model that invents Umbundu in front of an Umbundu speaker destroys the credibility this
+project is trying to earn.** Returning article 40 in Umbundu, correct and attributed, is still
+real functionality in an African language — and unlike free translation, it survives contact with
+a native speaker.
 
 There is no generative language model on Earth that speaks any Angolan language. On Hugging Face,
 Kimbundu has zero models of any kind; Kikongo has zero; Umbundu has three, all speech or translation,
