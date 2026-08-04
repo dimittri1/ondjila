@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="pt" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ondjila — o caminho</title>
+<style>
+:root{
+  --bg:#fbfaf7; --bg-soft:#f3f1ec; --panel:#ffffff;
+  --ink:#151a24; --ink-2:#3f4757; --ink-3:#77808f;
+  --line:#e2ded6; --line-2:#d3cec4;
+  --gold:#b8860b; --gold-soft:#f0e2bd; --gold-bg:#fdf8ec;
+  --navy:#132043;
+  --shadow:0 1px 2px rgba(19,32,67,.05), 0 8px 24px -12px rgba(19,32,67,.14);
+  --shadow-lift:0 2px 6px rgba(19,32,67,.07), 0 20px 44px -16px rgba(19,32,67,.24);
+  --land:#e8e3d8; --land-line:#cfc7b6;
+}
+:root[data-theme="dark"]{
+  --bg:#0a0f1c; --bg-soft:#0e1530; --panel:#111935;
+  --ink:#f2f5fc; --ink-2:#b3bdd6; --ink-3:#78849f;
+  --line:#222c4a; --line-2:#2d3a5e;
+  --gold:#ffd166; --gold-soft:#3a2f16; --gold-bg:#171d33;
+  --navy:#e8edfa;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  --shadow-lift:0 2px 6px rgba(0,0,0,.5), 0 20px 44px -16px rgba(0,0,0,.85);
+  --land:#1a2440; --land-line:#2b3860;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font:16px/1.65 "Segoe UI",-apple-system,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  transition:background .35s ease, color .35s ease;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+a{color:inherit}
+
+/* ───────── barra de topo ───────── */
+.topbar{
+  position:sticky; top:0; z-index:40;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:saturate(1.6) blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.topbar .wrap{display:flex;align-items:center;gap:20px;height:64px}
+.brand{display:flex;align-items:baseline;gap:11px;text-decoration:none;cursor:pointer}
+.brand b{font-family:Georgia,serif;font-weight:400;font-size:21px;letter-spacing:.13em}
+.brand span{color:var(--gold);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase}
+.spacer{flex:1}
+.author{color:var(--ink-3);font-size:13px;white-space:nowrap}
+.author b{color:var(--ink-2);font-weight:600}
+.iconbtn{
+  border:1px solid var(--line-2); background:var(--panel); color:var(--ink-2);
+  border-radius:8px; height:36px; padding:0 14px; font-size:13px; cursor:pointer;
+  font-family:inherit; transition:.18s ease;
+}
+.iconbtn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ───────── hero ───────── */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:var(--bg-soft)}
+.hero .wrap{
+  display:grid; grid-template-columns:1.15fr .85fr; gap:48px;
+  align-items:center; padding-top:76px; padding-bottom:76px;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  color:var(--gold); font-size:11.5px; letter-spacing:.2em; text-transform:uppercase;
+  border:1px solid var(--gold-soft); background:var(--gold-bg);
+  padding:6px 14px; border-radius:999px; margin:0 0 26px;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.72)}}
+h1.mark{
+  font-family:Georgia,"Times New Roman",serif; font-weight:400;
+  font-size:clamp(46px,6.4vw,76px); letter-spacing:.085em; line-height:1; margin:0;
+}
+.tagline{color:var(--gold);letter-spacing:.3em;font-size:12px;text-transform:uppercase;margin:15px 0 0}
+.lede{color:var(--ink-2);font-size:19.5px;max-width:52ch;margin:28px 0 0}
+.badges{display:flex;flex-wrap:wrap;gap:9px;margin:30px 0 0}
+.badge{
+  border:1px solid var(--line-2);background:var(--panel);border-radius:999px;
+  padding:6px 15px;font-size:12.5px;color:var(--ink-2);
+}
+.mapbox{position:relative}
+.mapbox svg{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 34px rgba(19,32,67,.13))}
+.pinlab{
+  position:absolute; left:57%; top:63%;
+  background:var(--panel); border:1px solid var(--gold);
+  color:var(--gold); font-size:12px; font-weight:600; letter-spacing:.06em;
+  padding:5px 12px; border-radius:999px; box-shadow:var(--shadow);
+  animation:rise .8s .5s both;
+}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ───────── números ───────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:64px 0 0;border-radius:4px;overflow:hidden}
+.stat{background:var(--panel);padding:24px 26px}
+.stat b{display:block;font-size:31px;font-weight:600;color:var(--gold);letter-spacing:-.015em}
+.stat span{display:block;color:var(--ink-3);font-size:13.5px;margin-top:8px;line-height:1.5}
+
+/* ───────── títulos ───────── */
+h2{font-family:Georgia,serif;font-weight:400;font-size:29px;margin:76px 0 5px}
+.note{color:var(--ink-3);font-size:14px;margin:0 0 30px}
+
+/* ───────── cartões ───────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(325px,1fr));gap:18px}
+.mod{
+  position:relative; text-align:left; font:inherit; color:inherit;
+  border:1px solid var(--line); border-radius:8px; padding:26px 26px 20px;
+  background:var(--panel); box-shadow:var(--shadow);
+  display:flex; flex-direction:column; gap:12px; cursor:pointer;
+  transition:transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s ease, border-color .2s ease;
+  animation:cardin .5s both;
+}
+@keyframes cardin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.mod:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);border-color:var(--gold)}
+.mod:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.mod:active{transform:translateY(-1px)}
+.mod h3{margin:0;font-size:18px;font-weight:650;padding-right:30px}
+.mod p{margin:0;color:var(--ink-2);font-size:14.5px}
+.reach{color:var(--ink-2);font-size:13.5px;border-left:2px solid var(--gold);padding-left:13px;background:var(--gold-bg);padding:9px 13px;border-radius:0 4px 4px 0}
+.arrow{
+  position:absolute;top:24px;right:24px;width:26px;height:26px;
+  border:1px solid var(--line-2);border-radius:50%;
+  display:grid;place-items:center;color:var(--ink-3);font-size:13px;
+  transition:.2s ease;
+}
+.mod:hover .arrow{background:var(--gold);border-color:var(--gold);color:#fff;transform:translateX(3px)}
+.openlbl{
+  position:absolute;top:29px;right:60px;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold);opacity:0;transform:translateX(6px);
+  transition:.2s ease;pointer-events:none;
+}
+.mod:hover .openlbl{opacity:1;transform:none}
+.foot{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  margin-top:auto;padding-top:15px;border-top:1px solid var(--line);
+  color:var(--ink-3);font-size:12.5px;
+}
+.pill{border:1px solid var(--line-2);border-radius:999px;padding:3px 11px;white-space:nowrap}
+.pill.active{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
+.src{font-style:italic;text-align:right}
+.open-hint{
+  position:absolute;inset:auto 0 0 0;height:3px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;transition:transform .25s ease;
+  border-radius:0 0 8px 8px;
+}
+.mod:hover .open-hint{transform:scaleX(1)}
+
+/* ───────── vista de detalhe ───────── */
+.detail{display:none}
+body.viewing .detail{display:block}
+body.viewing .home{display:none}
+.back{
+  display:inline-flex;align-items:center;gap:9px;margin:34px 0 0;
+  border:1px solid var(--line-2);background:var(--panel);color:var(--ink-2);
+  border-radius:8px;padding:9px 16px;font:inherit;font-size:14px;cursor:pointer;
+  transition:.18s ease;
+}
+.back:hover{border-color:var(--gold);color:var(--gold);transform:translateX(-3px)}
+.dpanel{
+  border:1px solid var(--line);border-radius:10px;background:var(--panel);
+  box-shadow:var(--shadow);padding:34px;margin:24px 0 0;
+}
+.dmeta{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 0}
+.agent{
+  border:1px solid var(--line);border-radius:10px;background:var(--bg-soft);
+  padding:26px;margin:22px 0 0;
+}
+.status{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-3)}
+.led{width:8px;height:8px;border-radius:50%;background:var(--ink-3);flex:none}
+.led.on{background:#1a9d5a;box-shadow:0 0 0 3px rgba(26,157,90,.16)}
+.led.off{background:#c2410c;box-shadow:0 0 0 3px rgba(194,65,12,.14)}
+.ask{display:flex;gap:10px;margin:18px 0 0}
+.ask input{
+  flex:1;border:1px solid var(--line-2);border-radius:8px;background:var(--panel);
+  color:var(--ink);padding:12px 15px;font:inherit;font-size:15px;
+}
+.ask input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-bg)}
+.ask button{
+  border:1px solid var(--gold);background:var(--gold);color:#fff;
+  border-radius:8px;padding:0 22px;font:inherit;font-size:14.5px;font-weight:600;cursor:pointer;
+  transition:.18s ease;
+}
+.ask button:hover{filter:brightness(1.08)}
+.ask button:disabled{opacity:.45;cursor:not-allowed}
+.answer{margin:18px 0 0;color:var(--ink-2);font-size:15px;white-space:pre-wrap}
+
+/* ───────── perguntas reais ───────── */
+.qlabel{font-size:13px;color:var(--ink-3);margin:0 0 12px}
+.chips{display:flex;flex-direction:column;gap:10px}
+.chip{
+  text-align:left;font:inherit;font-size:14.5px;color:var(--ink-2);
+  border:1px solid var(--line-2);background:var(--panel);border-radius:9px;
+  padding:14px 46px 14px 17px;cursor:pointer;position:relative;
+  transition:.18s cubic-bezier(.2,.8,.3,1);
+}
+.chip:hover{border-color:var(--gold);color:var(--ink);transform:translateX(4px);box-shadow:var(--shadow)}
+.chip::after{
+  content:"›";position:absolute;right:18px;top:50%;transform:translateY(-50%);
+  color:var(--gold);font-size:21px;line-height:1;opacity:0;transition:.18s ease;
+}
+.chip:hover::after{opacity:1;right:15px}
+
+/* ───────── o caminho ───────── */
+.path{list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:0}
+.path li{
+  display:flex;gap:16px;align-items:flex-start;padding:0 0 20px;position:relative;
+  color:var(--ink-3);font-size:14.5px;
+}
+.path li:not(:last-child)::before{
+  content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line);
+}
+.path li.done:not(:last-child)::before{background:var(--gold)}
+.path .num{
+  flex:none;width:28px;height:28px;border-radius:50%;border:2px solid var(--line);
+  display:grid;place-items:center;font-size:12.5px;font-weight:600;
+  background:var(--panel);color:var(--ink-3);z-index:1;transition:.3s ease;
+}
+.path li.done .num{border-color:var(--gold);background:var(--gold);color:#fff}
+.path li.done{color:var(--ink)}
+.path li.active .num{
+  border-color:var(--gold);color:var(--gold);
+  animation:beat 1s ease-in-out infinite;
+}
+@keyframes beat{0%,100%{box-shadow:0 0 0 0 var(--gold-bg)}50%{box-shadow:0 0 0 7px var(--gold-bg)}}
+
+/* ───────── resultado ───────── */
+.result{margin:26px 0 0;border:1px solid var(--gold);border-radius:10px;overflow:hidden;animation:cardin .45s both}
+.result header{background:var(--gold-bg);border-bottom:1px solid var(--gold-soft);padding:18px 24px}
+.result header b{display:block;font-size:16.5px;color:var(--ink)}
+.result header span{display:block;color:var(--ink-2);font-size:14px;margin-top:6px}
+.rbody{padding:24px}
+.rbody h4{margin:0 0 12px;font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.rbody h4:not(:first-child){margin-top:26px}
+.bring{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.bring li{display:flex;gap:13px;align-items:flex-start;font-size:15px;color:var(--ink)}
+.tick{
+  flex:none;width:21px;height:21px;border-radius:5px;border:1.5px solid var(--gold);
+  display:grid;place-items:center;color:var(--gold);font-size:12px;margin-top:2px;
+}
+.rline{font-size:15px;color:var(--ink)}
+.warn{
+  margin-top:26px;border-left:3px solid #c2410c;background:color-mix(in srgb,#c2410c 7%,transparent);
+  padding:13px 16px;font-size:14.5px;color:var(--ink-2);border-radius:0 5px 5px 0;
+}
+.basis{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3);font-style:italic}
+
+/* ───────── espera ───────── */
+.thinking{display:flex;align-items:center;gap:11px;color:var(--ink-3);font-size:14.5px;margin:22px 0 0}
+.spin{width:16px;height:16px;border:2px solid var(--line-2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.skel{height:13px;border-radius:4px;background:linear-gradient(90deg,var(--line) 25%,var(--bg-soft) 50%,var(--line) 75%);background-size:200% 100%;animation:shim 1.3s linear infinite}
+@keyframes shim{to{background-position:-200% 0}}
+.empty{color:var(--ink-3);font-size:14.5px;border:1px dashed var(--line-2);border-radius:9px;padding:22px;margin:24px 0 0}
+
+/* ───────── geração ao vivo ───────── */
+.live{margin:24px 0 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.telem{
+  display:flex;flex-wrap:wrap;gap:22px;align-items:center;
+  padding:12px 20px;border-bottom:1px solid var(--line);background:var(--bg-soft);
+  font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--ink-3);
+}
+.telem b{color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums}
+.telem .lbl{letter-spacing:.09em;text-transform:uppercase;font-size:10.5px}
+.livetext{padding:22px;font-size:15.5px;line-height:1.72;color:var(--ink);white-space:pre-wrap;min-height:58px}
+#ground:not(:empty){padding:18px 20px 4px;background:var(--gold-bg);border-bottom:1px solid var(--gold-soft)}
+.glabel{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:600}
+.gitem{margin-bottom:14px}
+.gitem b{display:block;font-size:14px;color:var(--ink)}
+.gitem span{display:block;font-size:12px;color:var(--ink-3);font-style:italic;margin:2px 0 6px}
+.gitem p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink-2)}
+.caret{display:inline-block;width:8px;height:1.05em;background:var(--gold);vertical-align:-2px;animation:blink .95s step-end infinite;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.rawtoggle{
+  border:0;background:none;color:var(--ink-3);font:inherit;font-size:12.5px;
+  cursor:pointer;padding:10px 20px;border-top:1px solid var(--line);width:100%;text-align:left;
+}
+.rawtoggle:hover{color:var(--gold)}
+.raw{
+  display:none;padding:0 20px 18px;font-family:ui-monospace,Consolas,monospace;
+  font-size:11.5px;color:var(--ink-3);white-space:pre-wrap;word-break:break-all;
+  max-height:230px;overflow:auto;
+}
+.raw.on{display:block}
+
+footer{margin:90px 0 76px;padding-top:32px;border-top:1px solid var(--line);color:var(--ink-3);font-size:13.5px}
+footer p{margin:0 0 11px;max-width:72ch}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr;gap:36px;padding-top:52px}.mapbox{max-width:380px;margin:0 auto}.author{display:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <a class="brand" onclick="goHome()"><b>ONDJILA</b><span>o caminho</span></a>
+  <div class="spacer"></div>
+  <div class="author">Desenvolvido por <b>Augusto Bernardo Lopes</b></div>
+  <button class="iconbtn" onclick="toggleTheme()" id="tbtn">Tema escuro</button>
+</div></div>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero"><div class="wrap">
+  <div>
+    <span class="eyebrow"><i class="dot"></i> Africa Deep Tech Challenge 2026</span>
+    <h1 class="mark">ONDJILA</h1>
+    <p class="tagline">O caminho &middot; Umbundu</p>
+    <p class="lede">
+      Um agente aut&oacute;nomo que corre por inteiro num port&aacute;til barato — sem internet,
+      sem nuvem, sem placa gr&aacute;fica. Feito para os lugares onde a informa&ccedil;&atilde;o de
+      que as pessoas mais precisam est&aacute; atr&aacute;s de um balc&atilde;o fechado.
+    </p>
+    <div class="badges">
+      <span class="badge">llama.cpp &middot; GGUF</span>
+      <span class="badge">&le; 7 GB de RAM</span>
+      <span class="badge">CPU apenas</span>
+      <span class="badge">Zero liga&ccedil;&otilde;es de rede</span>
+      <span class="badge">Portugu&ecirc;s &middot; Umbundu</span>
+    </div>
+  </div>
+
+  <div class="mapbox">
+    <svg viewBox="0 0 430 490" role="img" aria-label="Mapa de África com Angola destacada">
+      <defs>
+        <linearGradient id="ao" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#e0a42a"/><stop offset="100%" stop-color="#b8860b"/>
+        </linearGradient>
+      </defs>
+      <!-- Continente. Vertices derivados de coordenadas reais com uma projeccao
+           equirectangular simples: x = (lon+17)/68*400+14 · y = (37-lat)/72*470
+           Cabo Espartel · Tunis · Golfo de Sirte · Alexandria · Suez · Porto Sudao ·
+           Massaua · Bab-el-Mandeb · Berbera · Cabo Guardafui · Mogadixo · Mombaca ·
+           Dar es Salaam · Beira · Durban · Cabo das Agulhas · Cidade do Cabo ·
+           Walvis Bay · Luanda · Pointe-Noire · Duala · Lagos · Acra · Abidjan ·
+           Monrovia · Freetown · Dacar · Nouakchott · Dakhla · Agadir -->
+      <path fill="var(--land)" stroke="var(--land-line)" stroke-width="1.6" stroke-linejoin="round" d="
+        M79,8 L110,4 L173,6 L200,26 L220,39 L255,36 L290,39 L304,46
+        L333,114 L347,140 L367,160 L379,174 L415,164 L381,228 L373,235
+        L347,268 L345,287 L319,372 L296,437 L232,468 L222,463
+        L199,392 L192,299 L185,273 L171,215 L134,199 L113,206 L90,207
+        L50,201 L36,186 L12,146 L20,124 L20,87 L58,43 Z"/>
+      <!-- Madagascar -->
+      <path fill="var(--land)" stroke="var(--land-line)" stroke-width="1.6" stroke-linejoin="round" d="
+        M404,320 L407,352 L380,408 L368,385 L384,339 Z"/>
+      <!-- Angola -->
+      <path fill="url(#ao)" stroke="#8a6508" stroke-width="1.3" stroke-linejoin="round" d="
+        M186,281 L243,287 L243,313 L255,326 L255,356 L183,354 Z"/>
+      <circle cx="216" cy="320" r="4.5" fill="#fff" stroke="#8a6508" stroke-width="1.8"/>
+    </svg>
+    <span class="pinlab">Angola</span>
+  </div>
+</div></section>
+
+<div class="wrap">
+
+  <!-- ══════════ INÍCIO ══════════ -->
+  <div class="home">
+    <section class="stats" id="stats"></section>
+
+    <h2>Escolha o que precisa</h2>
+    <p class="note" id="jur">a carregar…</p>
+    <div class="grid" id="grid"></div>
+
+    <h2>Como funciona</h2>
+    <p class="note">O modelo nunca escreve uma ac&ccedil;&atilde;o em texto livre.</p>
+    <div class="grid" id="how"></div>
+  </div>
+
+  <!-- ══════════ DETALHE ══════════ -->
+  <div class="detail">
+    <button class="back" onclick="goHome()">&larr; Voltar aos m&oacute;dulos</button>
+    <div class="dpanel">
+      <h2 style="margin-top:0" id="dtitle"></h2>
+      <p class="note" id="dsummary" style="font-size:16.5px;color:var(--ink-2);margin-bottom:0"></p>
+      <div class="reach" id="dreach" style="margin-top:20px"></div>
+      <div class="dmeta" id="dmeta"></div>
+
+      <div class="agent">
+        <div class="status">
+          <i class="led" id="led"></i><span id="ledtxt">a verificar o motor&hellip;</span>
+        </div>
+
+        <div id="qzone" style="margin-top:22px">
+          <p class="qlabel" id="qlabel">Perguntas que as pessoas fazem mesmo. Escolha uma, ou escreva a sua.</p>
+          <div class="chips" id="chips"></div>
+          <div class="ask">
+            <input id="q" placeholder="Conte a sua situa&ccedil;&atilde;o por palavras suas&hellip;" autocomplete="off"
+                   onkeydown="if(event.key==='Enter')ask()">
+            <button id="send" onclick="ask()">Ver o caminho</button>
+          </div>
+        </div>
+
+        <div id="work" style="display:none">
+          <ol class="path" id="path"></ol>
+        </div>
+
+        <div id="out"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong style="color:var(--ink-2)">Estado:</strong> em desenvolvimento para o Africa Deep Tech
+      Challenge 2026. Ainda n&atilde;o est&aacute; pronto para ser usado pelas pessoas para quem foi escrito.</p>
+    <p id="legal"></p>
+    <p><code>O motor &eacute; universal. Os m&oacute;dulos s&atilde;o locais.</code></p>
+    <p style="margin-top:18px">Augusto Bernardo Lopes &middot; Angola</p>
+  </footer>
+</div>
+
+<script>
+const STATUS={in_progress:["em desenvolvimento",true],planned:["planeado",false]};
+let DATA=null, CURRENT=null;
+
+/* ── tema ── */
+function applyTheme(t){
+  document.documentElement.dataset.theme=t;
+  document.getElementById("tbtn").textContent = t==="light" ? "Tema escuro" : "Tema claro";
+  try{localStorage.setItem("ondjila-theme",t)}catch(e){}
+}
+function toggleTheme(){applyTheme(document.documentElement.dataset.theme==="light"?"dark":"light")}
+try{const s=localStorage.getItem("ondjila-theme"); if(s) applyTheme(s);}catch(e){}
+
+/* ── navegação ── */
+function goHome(){
+  document.body.classList.remove("viewing");
+  CURRENT=null;
+  history.replaceState(null,"","#");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function openModule(id){
+  const m=DATA.modules.find(x=>x.id===id); if(!m) return;
+  CURRENT=m;
+  document.getElementById("dtitle").textContent=m.title;
+  document.getElementById("dsummary").textContent=m.summary;
+  document.getElementById("dreach").textContent=m.reach;
+  const [label,active]=STATUS[m.status]||["",false];
+  document.getElementById("dmeta").innerHTML=
+    `<span class="pill${active?" active":""}">${label}</span>`+
+    `<span class="pill">${m.states} estados</span>`+
+    m.sources.map(s=>`<span class="pill">${s}</span>`).join("");
+
+  // A caixa de escrita esta SEMPRE disponivel, em todos os modulos.
+  // (Bug corrigido: antes escondia-se a zona inteira quando nao havia exemplos,
+  //  o que deixava 11 dos 12 modulos sem sitio nenhum onde escrever.)
+  const chips=document.getElementById("chips");
+  const has=m.examples&&m.examples.length;
+  chips.innerHTML = has ? m.examples.map(q=>
+      `<button class="chip" onclick="ask(this.dataset.q)" data-q="${q.replace(/"/g,"&quot;")}">${q}</button>`
+    ).join("") : "";
+  document.getElementById("qlabel").textContent = has
+    ? "Perguntas que as pessoas fazem mesmo. Escolha uma, ou escreva a sua."
+    : "Escreva a sua situação por palavras suas. O modelo responde, mas este módulo ainda não tem o fluxo legal construído.";
+  document.getElementById("out").innerHTML="";
+  document.getElementById("work").style.display="none";
+  document.getElementById("q").value="";
+  document.body.classList.add("viewing");
+  history.replaceState(null,"","#"+id);
+  window.scrollTo({top:0,behavior:"instant"});
+  checkEngine();
+}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+addEventListener("keydown",e=>{if(e.key==="Escape"&&CURRENT)goHome()});
+
+/* ── motor ── */
+async function checkEngine(){
+  const led=document.getElementById("led"), txt=document.getElementById("ledtxt");
+  const btn=document.getElementById("send");
+  try{
+    const r=await fetch("/api/engine"); const d=await r.json();
+    if(d.model_loaded){
+      led.className="led on";
+      txt.textContent=`Motor pronto · ${d.model} · ${d.quant} · ${d.ram_gb} GB em memória`;
+      btn.disabled=false;
+    }else{
+      led.className="led off";
+      txt.textContent=d.detail||"Modelo não carregado.";
+      btn.disabled=true;
+    }
+  }catch(e){
+    led.className="led off";
+    txt.textContent="Motor indisponível: "+e;
+    btn.disabled=true;
+  }
+}
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+function renderResult(d,live){
+  return `<div class="result">
+    <header>
+      <b>${esc(d.route)}</b>
+      <span>${esc(d.why)}</span>
+    </header>
+    <div class="rbody">
+      <h4>O que levar</h4>
+      <ul class="bring">${d.bring.map(b=>`<li><i class="tick">&#10003;</i><span>${esc(b)}</span></li>`).join("")}</ul>
+      <h4>Onde ir</h4>
+      <p class="rline">${esc(d.where)}</p>
+      <h4>Quanto custa</h4>
+      <p class="rline">${esc(d.cost)}</p>
+      ${d.warning?`<div class="warn">${esc(d.warning)}</div>`:""}
+      <p class="basis">Base legal: ${esc(d.basis)}${live?"":
+        " &middot; exemplo trabalhado a partir da lei, n&atilde;o gerado pelo modelo"}</p>
+    </div>
+  </div>`;
+}
+
+async function ask(preset){
+  if(!CURRENT) return;
+  const input=document.getElementById("q");
+  const q=(preset||input.value).trim(); if(!q) return;
+  input.value=q;
+
+  const btn=document.getElementById("send"), out=document.getElementById("out");
+  const work=document.getElementById("work"), pathEl=document.getElementById("path");
+  const steps=CURRENT.path||["Perceber a situação","Determinar o caminho","Verificar","Entregar"];
+
+  btn.disabled=true; out.innerHTML="";
+  work.style.display="";
+  pathEl.innerHTML=steps.map((s,i)=>
+    `<li id="st${i}"><i class="num">${i+1}</i><span>${esc(s)}</span></li>`).join("");
+
+  // O caminho acende-se passo a passo enquanto se espera.
+  const engine=await fetch("/api/engine").then(r=>r.json()).catch(()=>({model_loaded:false}));
+  let done=null;
+  const walk=(async()=>{
+    for(let i=0;i<steps.length;i++){
+      const li=document.getElementById("st"+i); if(!li) return;
+      li.classList.add("active");
+      await sleep(engine.model_loaded?900:520);
+      li.classList.remove("active"); li.classList.add("done");
+    }
+  })();
+
+  if(engine.model_loaded){
+    // Streaming real. O texto nasce token a token e a velocidade e medida ao vivo.
+    out.innerHTML=`<div class="live">
+      <div class="telem">
+        <span><span class="lbl">modelo</span> <b>${esc(engine.model||"—")}</b></span>
+        <span><span class="lbl">quant</span> <b>${esc(engine.quant||"—")}</b></span>
+        <span><span class="lbl">tokens</span> <b id="tn">0</b></span>
+        <span><span class="lbl">tok/s</span> <b id="tps">—</b></span>
+        <span><span class="lbl">estado</span> <b id="tst">a gerar</b></span>
+      </div>
+      <div id="ground"></div>
+      <div class="livetext" id="livetext"><span class="caret"></span></div>
+      <button class="rawtoggle" onclick="const r=document.getElementById('raw');r.classList.toggle('on');this.textContent=r.classList.contains('on')?'ocultar o fluxo em bruto do modelo':'ver o fluxo em bruto do modelo'">ver o fluxo em bruto do modelo</button>
+      <div class="raw" id="raw"></div>
+    </div>`;
+    const txtEl=document.getElementById("livetext"), rawEl=document.getElementById("raw");
+    let acc="";
+    try{
+      const r=await fetch("/api/ask_stream",{method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({module:CURRENT.id,question:q})});
+      const rd=r.body.getReader(), dec=new TextDecoder(); let buf="";
+      for(;;){
+        const {value,done:fin}=await rd.read(); if(fin) break;
+        buf+=dec.decode(value,{stream:true});
+        const parts=buf.split("\n\n"); buf=parts.pop();
+        for(const block of parts){
+          const ev=(block.match(/^event: (.+)$/m)||[])[1];
+          const dl=(block.match(/^data: (.+)$/m)||[])[1];
+          if(!ev||!dl) continue;
+          const d=JSON.parse(dl);
+          rawEl.textContent+=`${ev} ${dl}\n`;
+          if(ev==="grounding"){
+            const g=document.getElementById("ground");
+            g.innerHTML = d.found
+              ? `<div class="glabel">Lei aplic&aacute;vel, escolhida por c&oacute;digo antes de o modelo falar</div>`
+                + d.rules.map(r=>`<div class="gitem"><b>${esc(r.title)}</b>
+                     <span>${esc(r.source)}</span><p>${esc(r.text)}</p></div>`).join("")
+              : `<div class="glabel">Nenhuma regra correspondeu. O modelo foi instru&iacute;do a dizer que n&atilde;o consta.</div>`;
+          }else if(ev==="token"){
+            acc+=d.t;
+            txtEl.innerHTML=esc(acc)+'<span class="caret"></span>';
+            document.getElementById("tn").textContent=d.n;
+            document.getElementById("tps").textContent=d.tps;
+          }else if(ev==="done"){
+            txtEl.innerHTML=esc(acc);
+            document.getElementById("tst").textContent=`${d.seconds}s, terminado`;
+            document.getElementById("tps").textContent=d.tps;
+          }else if(ev==="error"){
+            txtEl.innerHTML=esc(acc)+"\n\n"+esc(d.detail);
+            document.getElementById("tst").textContent="falhou";
+          }
+        }
+      }
+    }catch(e){ txtEl.textContent="O motor falhou: "+e; }
+    await walk; btn.disabled=false; return;
+  }
+
+  await walk;
+
+  if(done){
+    out.innerHTML = done.answer
+      ? `<div class="result"><div class="rbody"><h4>Resposta</h4>
+           <p class="rline" style="white-space:pre-wrap">${esc(done.answer)}</p></div></div>`
+      : `<div class="empty">${done.detail||"sem resposta"}</div>`;
+  }else if(CURRENT.demo){
+    out.innerHTML =
+      `<div class="empty" style="margin-bottom:-8px">O motor ainda n&atilde;o est&aacute; ligado ao modelo.
+       Abaixo est&aacute; o percurso real para este caso, tirado da lei &mdash; &eacute; esta a forma
+       da resposta que o modelo vai gerar para a situa&ccedil;&atilde;o de cada pessoa.</div>`
+      + renderResult(CURRENT.demo,false);
+  }else{
+    out.innerHTML=`<div class="empty">Fluxo ainda n&atilde;o constru&iacute;do para este m&oacute;dulo.</div>`;
+  }
+  btn.disabled=false;
+}
+
+/* ── arranque ── */
+const HOW=[
+  ["Compreender","O modelo lê o que a pessoa escreveu ou disse, em português ou em Umbundu, e raciocina sem restrições.","modelo","sem gramática",false],
+  ["Comprometer","A acção é emitida sob uma gramática GBNF compilada a partir do estado actual. Saída inválida torna-se impossível.","modelo","gramática por estado",true],
+  ["Decidir","Regras, prazos, valores e elegibilidade são avaliados por código determinístico. Nada calculável é gerado pelo modelo.","sem modelo","código",false],
+  ["Verificar","Um validador confirma o passo antes do seguinte. Uma única tentativa de reparação, nunca uma auto-avaliação.","sem modelo","código",false]
+];
+
+fetch("/api/modules").then(r=>r.json()).then(d=>{
+  DATA=d;
+  document.getElementById("jur").textContent =
+    `${d.jurisdiction_name} · ${d.modules.length} módulos · um só modelo em memória · clique para abrir`;
+  document.getElementById("legal").textContent=d.legal_basis_note;
+
+  const st=d.modules.reduce((a,m)=>a+(m.states||0),0);
+  document.getElementById("stats").innerHTML=[
+    ["13,53 M","angolanos sem registo de nascimento"],
+    ["14,98 M","sem bilhete de identidade"],
+    ["71,3 %","dos rurais não têm o português como língua materna"],
+    [d.modules.length+" módulos", st+" estados sobre um único modelo"]
+  ].map(([b,s])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+
+  document.getElementById("grid").innerHTML=d.modules.map((m,i)=>{
+    const [label,active]=STATUS[m.status]||["",false];
+    return `<button class="mod" style="animation-delay:${i*45}ms" onclick="openModule('${m.id}')">
+      <span class="openlbl">Abrir</span><span class="arrow">&rarr;</span>
+      <h3>${m.title}</h3>
+      <p>${m.summary}</p>
+      <div class="reach">${m.reach}</div>
+      <div class="foot">
+        <span class="pill${active?" active":""}">${label}</span>
+        <span class="src">${m.sources[0]}</span>
+      </div>
+      <i class="open-hint"></i>
+    </button>`;
+  }).join("");
+
+  document.getElementById("how").innerHTML=HOW.map(([t,p,a,b,hi],i)=>
+    `<div class="mod" style="cursor:default;animation-delay:${i*45}ms">
+      <h3>${t}</h3><p>${p}</p>
+      <div class="foot"><span class="pill${hi?" active":""}">${a}</span><span class="src">${b}</span></div>
+    </div>`).join("");
+
+  const h=location.hash.slice(1); if(h) openModule(h);
+}).catch(e=>{
+  document.getElementById("grid").innerHTML=
+    `<div class="mod" style="cursor:default"><h3>Registo indisponível</h3><p>${e}</p></div>`;
+});
+</script>
+</body>
+</html>

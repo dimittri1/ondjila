@@ -1,0 +1,125 @@
+{
+  "_nota": "Regras extraidas da legislacao angolana. A Lei 15/14, art. 24.o, poe as leis fora do ambito do direito de autor, por isso este corpus e livre. Cada regra traz a fonte para que a resposta possa ser verificada por quem a le.",
+  "rules": [
+    {
+      "id": "hab.aumento_renda",
+      "module": "ao.habitacao",
+      "title": "Aumento da renda",
+      "text": "O senhorio não pode aumentar a renda de um mês para o outro. O aumento tem de ser comunicado ao arrendatário por escrito, com uma antecedência mínima de 60 dias. Um aumento comunicado com menos antecedência, ou comunicado apenas de viva voz, não produz efeito.",
+      "source": "Lei 26/15 (Lei do Arrendamento Urbano), art. 40.º",
+      "keywords": ["renda", "aumento", "aumentou", "subiu", "subir", "preco", "preço", "valor", "senhorio", "aumentar"]
+    },
+    {
+      "id": "hab.despejo",
+      "module": "ao.habitacao",
+      "title": "Prazo para despejo",
+      "text": "O senhorio não pode obrigar o arrendatário a sair de um dia para o outro. A denúncia do contrato pelo senhorio exige comunicação escrita com seis meses de antecedência. Uma ordem para sair em duas semanas não tem valor legal, e o arrendatário não é obrigado a cumpri-la.",
+      "source": "Lei 26/15, art. 41.º",
+      "keywords": ["despejo", "despejar", "sair", "sair de casa", "expulsar", "ordem", "prazo", "duas semanas", "obrigar"]
+    },
+    {
+      "id": "hab.sem_contrato",
+      "module": "ao.habitacao",
+      "title": "Arrendamento sem contrato escrito",
+      "text": "A falta de contrato escrito não retira direitos ao arrendatário. Quem paga renda com regularidade e o consegue provar, por recibos, transferências ou testemunhas, é considerado arrendatário para todos os efeitos, incluindo os prazos de aviso para aumento de renda e para despejo.",
+      "source": "Lei 26/15, art. 82.º",
+      "keywords": ["contrato", "sem contrato", "escrito", "verbal", "recibo", "prova", "anos"]
+    },
+    {
+      "id": "trab.despedimento",
+      "module": "ao.trabalho",
+      "title": "Despedimento sem justa causa",
+      "text": "O despedimento tem de ser comunicado por escrito e fundamentado. Um despedimento sem carta e sem motivo declarado é irregular. O trabalhador tem direito a indemnização, aos salários em falta, às férias não gozadas e aos proporcionais do décimo terceiro mês. A reclamação faz-se junto da Inspecção-Geral do Trabalho.",
+      "source": "Lei 7/15 (Lei Geral do Trabalho)",
+      "keywords": ["despedimento", "despedido", "mandado embora", "mandaram", "demitido", "carta", "justa causa", "indemnizacao", "indemnização"]
+    },
+    {
+      "id": "trab.salarios_atraso",
+      "module": "ao.trabalho",
+      "title": "Salários em atraso",
+      "text": "O salário é devido na data acordada. O atraso no pagamento é uma violação do contrato de trabalho e permite ao trabalhador reclamar junto da Inspecção-Geral do Trabalho, mantendo-se o direito ao valor em dívida e aos juros de mora. O trabalhador pode ainda resolver o contrato com justa causa se o atraso se prolongar.",
+      "source": "Lei 7/15 (Lei Geral do Trabalho)",
+      "keywords": ["salario", "salário", "pagar", "pagamento", "atraso", "meses sem", "nao paga", "não paga", "divida", "dívida"]
+    },
+    {
+      "id": "trab.maternidade",
+      "module": "ao.trabalho",
+      "title": "Licença de maternidade",
+      "text": "A Lei Geral do Trabalho reconhece o direito à licença de maternidade mas não fixa nela a sua duração: remete para legislação própria. Isto significa que uma trabalhadora que leia apenas a Lei Geral do Trabalho não consegue saber quantos dias lhe pertencem. A duração deve ser confirmada junto do Instituto Nacional de Segurança Social ou da Inspecção-Geral do Trabalho.",
+      "source": "Lei 7/15, art. 247.º",
+      "keywords": ["maternidade", "gravida", "grávida", "licenca", "licença", "parto", "bebe", "bebé", "dias"]
+    },
+    {
+      "id": "vd.apoio_gratuito",
+      "module": "ao.violencia_domestica",
+      "title": "Apoio garantido por lei",
+      "text": "A vítima de violência doméstica tem direito, por lei e sem custo, a apoio médico, psicológico, social e jurídico. O apoio jurídico gratuito é um direito, não um favor, e não depende de a vítima ter meios para pagar advogado. Pode ser pedido junto do Ministério da Justiça e dos Direitos Humanos, das organizações de apoio à vítima e dos serviços de acção social.",
+      "source": "Lei 25/11 (Contra a Violência Doméstica), art. 17.º",
+      "keywords": ["violencia", "violência", "bate", "bater", "agressao", "agressão", "advogado", "apoio", "abrigo", "ajuda", "marido", "companheiro"]
+    },
+    {
+      "id": "vd.queixa_recusada",
+      "module": "ao.violencia_domestica",
+      "title": "Recusa de queixa",
+      "text": "A violência doméstica é crime público. Isto quer dizer que a queixa não pode ser recusada e que o processo avança independentemente da vontade da vítima em desistir. Se um posto policial se recusar a receber a queixa, ela pode ser apresentada noutro posto, junto do Ministério Público, ou por intermédio de uma organização de apoio à vítima.",
+      "source": "Lei 25/11 (Contra a Violência Doméstica)",
+      "keywords": ["queixa", "policia", "polícia", "recusaram", "nao aceitaram", "não aceitaram", "denuncia", "denúncia", "esquadra"]
+    },
+    {
+      "id": "esc.sem_assento",
+      "module": "ao.escola",
+      "title": "Matrícula sem assento de nascimento",
+      "text": "A falta de assento de nascimento não pode ser motivo para recusar a matrícula de uma criança no ensino primário. O direito à educação é constitucional e não está dependente da posse de documentos. A escola deve aceitar a matrícula e encaminhar a família para a regularização do registo em paralelo.",
+      "source": "Constituição, art. 79.º · Lei 17/16 (Bases do Sistema de Educação)",
+      "keywords": ["matricula", "matrícula", "escola", "assento", "registo", "recusou", "recusaram", "documento", "filha", "filho"]
+    },
+    {
+      "id": "esc.gratuitidade",
+      "module": "ao.escola",
+      "title": "Gratuitidade do ensino primário",
+      "text": "O ensino primário na rede pública é gratuito e obrigatório. A cobrança de valores pela matrícula numa escola pública do ensino primário não tem base legal e deve ser comunicada à direcção provincial de educação.",
+      "source": "Lei 17/16 (Bases do Sistema de Educação)",
+      "keywords": ["dinheiro", "pagar", "cobrou", "cobraram", "gratuito", "gratuita", "propina", "taxa", "matricula", "matrícula"]
+    },
+    {
+      "id": "id.registo_tardio",
+      "module": "ao.identidade",
+      "title": "Registo tardio de nascimento",
+      "text": "Não existe idade limite para registar um nascimento. Quem nunca foi registado pode fazê-lo a qualquer momento através do registo tardio, junto da Conservatória do Registo Civil da área de residência ou de um posto SIAC. O registo de nascimento é gratuito desde 2013. São normalmente exigidas duas testemunhas maiores de idade com bilhete de identidade válido, e atestado de residência.",
+      "source": "Lei 20/23 (Registo Civil) · Decreto-Lei 3/14",
+      "keywords": ["registo", "registar", "assento", "nascimento", "tardio", "nunca foi", "sem registo", "anos", "crianca", "criança", "filha", "filho"]
+    },
+    {
+      "id": "id.pais_sem_bi",
+      "module": "ao.identidade",
+      "title": "Pais falecidos ou sem documentos",
+      "text": "A ausência de documentos dos pais não impede o registo. Quando os pais faleceram ou nunca tiveram bilhete de identidade, o registo faz-se com base na declaração de duas testemunhas maiores de idade que conheçam o requerente, em atestado de residência, e nos nomes completos dos progenitores. Se houver dúvidas que a conservatória não consiga resolver, o processo segue para o Tribunal de Família.",
+      "source": "Lei 20/23 (Registo Civil)",
+      "keywords": ["pais", "morreram", "faleceram", "falecidos", "sem bi", "nao tinha", "não tinham", "testemunhas", "obito", "óbito"]
+    },
+    {
+      "id": "id.segunda_via",
+      "module": "ao.identidade",
+      "title": "Segunda via do bilhete de identidade",
+      "text": "Quem já foi registado não precisa de voltar à província onde nasceu para pedir a segunda via do bilhete de identidade. O pedido pode ser feito em qualquer posto de identificação ou SIAC, uma vez que o assento de nascimento já existe no sistema. É necessária a certidão de nascimento, que pode ser pedida no mesmo acto.",
+      "source": "Decreto-Lei 3/14",
+      "keywords": ["perdi", "perdeu", "segunda via", "roubaram", "extraviou", "provincia", "província", "voltar", "onde nasci"]
+    },
+    {
+      "id": "ter.posse_longa",
+      "module": "ao.terra",
+      "title": "Ocupação de boa-fé prolongada",
+      "text": "A ocupação pacífica e de boa-fé de terrenos rurais por comunidades ou famílias, mantida ao longo de muitos anos, é reconhecida pela Lei de Terras e pode ser convertida em título. A ausência de título não significa, por si só, ausência de direito. O reconhecimento pede-se junto da administração municipal e dos serviços de cadastro.",
+      "source": "Lei 9/04 (Lei de Terras)",
+      "keywords": ["terra", "terreno", "lavra", "titulo", "título", "anos", "cultivo", "posse", "tirar", "ocupacao", "ocupação"]
+    },
+    {
+      "id": "cons.garantia",
+      "module": "ao.consumidor",
+      "title": "Produto com defeito",
+      "text": "O consumidor tem direito à reparação, substituição ou devolução do valor pago quando o bem apresenta defeito que não lhe seja imputável. A recusa do vendedor pode ser reclamada junto do Instituto Nacional de Defesa do Consumidor. O talão ou factura serve de prova da compra.",
+      "source": "Lei 15/03 (Defesa do Consumidor)",
+      "keywords": ["avariou", "defeito", "trocar", "devolver", "garantia", "loja", "comprei", "telemovel", "telemóvel", "reclamar"]
+    }
+  ]
+}

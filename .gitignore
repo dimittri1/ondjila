@@ -1,0 +1,22 @@
+# Pesos do modelo — NUNCA commitar. Exigido pelas regras do ADTC.
+*.gguf
+model/
+*.bin
+*.safetensors
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Perfis e artefactos locais
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+
+# Saidas do profiler (geradas, nao versionadas)
+submission.json
+audit.json
+verdict.json
