@@ -1,0 +1,59 @@
+{
+  "fonte": "https://www.tribunalconstitucional.ao/pt/constituicao/constituicao/",
+  "instituicao": "Tribunal Constitucional de Angola",
+  "licenca": "dominio publico",
+  "base_legal": "Lei 15/14, art. 24.o -- as leis e as decisoes de orgaos administrativos e judiciais estao fora do ambito do direito de autor",
+  "linguas": {
+    "cjk": {
+      "url": "https://www.tribunalconstitucional.ao/media/hmqo1b14/book_16x23_cra_cokwe.pdf",
+      "pdf_bytes": 8024238,
+      "texto_chars": 192779
+    },
+    "fio": {
+      "url": "https://www.tribunalconstitucional.ao/media/4hpg2wmn/book_16x23_cra_ifyoti.pdf",
+      "pdf_bytes": 8046497,
+      "texto_chars": 196058
+    },
+    "kon": {
+      "url": "https://www.tribunalconstitucional.ao/media/cu3hi2kx/book_16x23_cra_kikongo.pdf",
+      "pdf_bytes": 8062442,
+      "texto_chars": 230071
+    },
+    "kmb": {
+      "url": "https://www.tribunalconstitucional.ao/media/2svar1y2/book_16x23_cra_kimbundu.pdf",
+      "pdf_bytes": 8079164,
+      "texto_chars": 212418
+    },
+    "nqa": {
+      "url": "https://www.tribunalconstitucional.ao/media/akio4aux/book_16x23_cra_ngangela.pdf",
+      "pdf_bytes": 8055970,
+      "texto_chars": 208951
+    },
+    "kwn": {
+      "url": "https://www.tribunalconstitucional.ao/media/v0vh42kf/book_16x23_cra_oluhelelo.pdf",
+      "pdf_bytes": 8055144,
+      "texto_chars": 211622
+    },
+    "nyk": {
+      "url": "https://www.tribunalconstitucional.ao/media/ydnl3hsl/book_16x23_cra_olunyaneka.pdf",
+      "pdf_bytes": 8053198,
+      "texto_chars": 187521
+    },
+    "kua": {
+      "url": "https://www.tribunalconstitucional.ao/media/byvibwgo/book_16x23_cra_oshikwanyama.pdf",
+      "pdf_bytes": 8100785,
+      "texto_chars": 193823
+    },
+    "umb": {
+      "url": "https://www.tribunalconstitucional.ao/media/10ed1f1n/book_cra_16x23_umbundu.pdf",
+      "pdf_bytes": 8072618,
+      "texto_chars": 184495
+    },
+    "por": {
+      "url": "https://www.tribunalconstitucional.ao/media/d11gvf0z/edicao-especial-actualizada-2022.pdf",
+      "pdf_bytes": 3412401,
+      "texto_chars": 224368
+    }
+  },
+  "aviso": "Texto extraido de PDF. Requer revisao humana antes de servir de dados de treino: a extraccao pode partir palavras, trocar diacriticos e misturar colunas."
+}

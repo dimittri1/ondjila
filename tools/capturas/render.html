@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="pt"><head><meta charset="utf-8">
+<title>Ondjila — folha de captura</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --panel:#fff; --ink:#151a24; --ink2:#3f4757; --ink3:#77808f;
+    --line:#e2ded6; --gold:#b8860b; --goldbg:#fdf8ec; --goldln:#f0e2bd;
+    --red:#c2410c; --green:#1a7f4b;
+  }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+       font:15px/1.6 "Segoe UI",-apple-system,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  /* cada folha e exactamente 1200x800 = 3:2, o racio que o Devpost pede */
+  .sheet{width:1200px;height:800px;padding:54px 60px;position:relative;overflow:hidden;
+         background:var(--bg);display:flex;flex-direction:column}
+  .kicker{color:var(--gold);font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin:0 0 14px;font-weight:600}
+  h1{font-family:Georgia,serif;font-weight:400;font-size:40px;margin:0 0 10px;line-height:1.15}
+  .sub{color:var(--ink2);font-size:17px;margin:0 0 26px;max-width:88ch}
+  .term{background:#0f1420;color:#d7dce8;border-radius:9px;padding:22px 26px;
+        font-family:ui-monospace,Consolas,monospace;font-size:12.5px;line-height:1.62;
+        white-space:pre;overflow:hidden;flex:1;box-shadow:0 12px 34px -18px rgba(19,32,67,.5)}
+  .term .g{color:#4ade80} .term .r{color:#fb7185} .term .y{color:#fbbf24}
+  .term .d{color:#64748b} .term .w{color:#fff;font-weight:600}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px 26px;
+        box-shadow:0 8px 24px -16px rgba(19,32,67,.3);display:flex;flex-direction:column}
+  .card.bad{border-color:var(--red);background:#fff8f5}
+  .card.good{border-color:var(--gold);background:var(--goldbg)}
+  .card h3{margin:0 0 4px;font-size:15px;letter-spacing:.03em}
+  .card .tag{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin:0 0 14px}
+  .bad .tag{color:var(--red)} .good .tag{color:var(--gold)}
+  .quote{font-size:19px;line-height:1.55;color:var(--ink)}
+  .meta{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);color:var(--ink3);font-size:12.5px}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th{text-align:left;color:var(--ink3);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+     padding:0 14px 12px 0;font-weight:600;border-bottom:1px solid var(--line)}
+  td{padding:13px 14px 13px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  tr.hi td{background:var(--goldbg);font-weight:600}
+  tr.out td{color:var(--ink3);text-decoration:line-through;text-decoration-color:var(--red)}
+  .foot{position:absolute;left:60px;right:60px;bottom:26px;display:flex;justify-content:space-between;
+        color:var(--ink3);font-size:11.5px;border-top:1px solid var(--line);padding-top:14px}
+  .foot b{color:var(--ink2);font-weight:600}
+  .big{font-size:56px;font-weight:600;color:var(--gold);letter-spacing:-.02em;line-height:1}
+  .stat{display:flex;gap:44px;margin:8px 0 26px}
+  .stat div span{display:block;color:var(--ink3);font-size:13px;margin-top:6px}
+</style></head>
+<body>
+<div class="sheet" id="sheet"></div>
+<script>
+// As folhas sao geradas a partir de dados REAIS medidos, nao de texto inventado.
+const SHEETS = {
+
+"05-antes-depois": `
+  <p class="kicker">A medição que justifica a arquitectura</p>
+  <h1>Mesma máquina. Mesmo modelo. Mesma pergunta.</h1>
+  <p class="sub">“O meu senhorio subiu a renda de um mês para o outro. Pode fazer isso?”</p>
+  <div class="cols">
+    <div class="card bad">
+      <p class="tag">Modelo sozinho</p>
+      <h3>Sem lei à frente</h3>
+      <p class="quote" style="margin-top:18px">“Sim, pode.”</p>
+      <p style="color:var(--red);font-weight:600;margin-top:14px">Errado.</p>
+      <p class="meta">Um modelo de 2 mil milhões de parâmetros não conhece a lei angolana e inventa com aplomb.</p>
+    </div>
+    <div class="card good">
+      <p class="tag">Com ancoragem determinística</p>
+      <h3>Lei escolhida por código antes de gerar</h3>
+      <p class="quote" style="margin-top:18px">“Não pode. O aumento tem de ser comunicado por escrito, com antecedência mínima de 60 dias.”</p>
+      <p style="color:var(--gold);font-weight:600;margin-top:14px">Correcto, e verificável.</p>
+      <p class="meta">Lei 26/15 (Arrendamento Urbano), art. 40.º — citada ao utilizador.</p>
+    </div>
+  </div>`,
+
+"06-raciocinio": `
+  <p class="kicker">Correcção dentro do próprio GGUF</p>
+  <h1>O modelo estava mudo, e ninguém veria porquê</h1>
+  <p class="sub">Testado como um jurado testa: ficheiro, runtime, pergunta. Sem parâmetros, sem instruções nossas.</p>
+  <div class="cols">
+    <div class="card bad">
+      <p class="tag">Ficheiro original</p>
+      <h3>Qwen3.5-2B-Q4_K_M.gguf</h3>
+      <p class="quote" style="margin-top:16px;color:var(--red)">RESPOSTA VAZIA</p>
+      <p style="margin-top:14px;font-family:ui-monospace,monospace;font-size:12px;color:var(--ink3)">
+reasoning_content: 380 caracteres<br>
+“Thinking Process: 1. Analyze the<br>Request... ” &nbsp;<i>(em inglês)</i><br><br>
+finish_reason: length<br>tokens: 100 &nbsp; tempo: 76,9 s</p>
+      <p class="meta">Gastou o orçamento todo a pensar. Nunca falou com o utilizador.</p>
+    </div>
+    <div class="card good">
+      <p class="tag">Template corrigido nos metadados</p>
+      <h3>ondjila-Q4_K_M.gguf</h3>
+      <p class="quote" style="margin-top:16px;font-size:15px">“Para registar o nascimento de uma criança em Angola, é necessário apresentar…”</p>
+      <p style="margin-top:14px;font-family:ui-monospace,monospace;font-size:12px;color:var(--ink3)">
+reasoning_content: nenhum<br>resposta: completa, em português</p>
+      <p class="meta">A correcção vive no ficheiro, por isso vale em LM Studio, Ollama ou llama.cpp.</p>
+    </div>
+  </div>`,
+
+"07-bakeoff": `
+  <p class="kicker">Escolha do modelo base — medido, não estimado</p>
+  <h1>Quatro candidatos, condições idênticas</h1>
+  <p class="sub"><code>llama-bench -p 512 -n 128 -ngl 0 -t 4 -r 3 --load-mode mlock</code> — o mesmo comando que o profiler oficial corre.</p>
+  <table>
+    <tr><th>Modelo</th><th>Ficheiro</th><th>Prefill t/s</th><th>Geração t/s</th><th>Pico RAM</th></tr>
+    <tr><td>Qwen3-1.7B</td><td>1,1 GB</td><td>10,31</td><td>2,78</td><td>1,19 GB</td></tr>
+    <tr class="hi"><td>Qwen3.5-2B &nbsp;← escolhido</td><td>1,2 GB</td><td>16,81</td><td>2,67</td><td>1,35 GB</td></tr>
+    <tr><td>Granite-4.1-3B</td><td>2,0 GB</td><td>9,67</td><td>3,17</td><td>2,10 GB</td></tr>
+    <tr class="out"><td>Qwen3.5-4B</td><td>2,6 GB</td><td>9,62</td><td>1,91</td><td>2,78 GB</td></tr>
+  </table>
+  <p class="sub" style="margin-top:24px;font-size:15px">
+    A geração fica quase empatada porque num CPU sem AVX2 ela é limitada pelo cálculo, não pela memória.
+    O que discrimina é o prefill — e num ciclo de agente o prefill domina, porque o prompt de sistema
+    é reenviado a cada turno. O modelo de 4B fica de fora: falha a referência de velocidade.</p>`,
+
+"08-testes": `
+  <p class="kicker">Verificação automática</p>
+  <h1>22 verificações, zero falhas</h1>
+  <p class="sub">Um comando corre tudo e diz o que falta. Inclui o teste que mais importa: a ancoragem legal.</p>
+  <div class="term"><span class="d">$ bash tools/run_tests.sh</span>
+
+<span class="w">== 1. Estrutura exigida pelo ADTC ==</span>
+  <span class="g">[ OK ]</span>   existe metadata.json          <span class="g">[ OK ]</span>   .gitignore exclui *.gguf
+  <span class="g">[ OK ]</span>   existe download_model.sh      <span class="g">[ OK ]</span>   .gitignore exclui model/
+  <span class="g">[ OK ]</span>   existe REPORT.md
+
+<span class="w">== 2. metadata.json ==</span>
+  <span class="g">[ OK ]</span>   test_prompts = 2   <span class="d">(exactamente 2, como exigido)</span>
+  <span class="g">[ OK ]</span>   dominio autonomous_ai_agents      <span class="g">[ OK ]</span>   african_alpha_claim = true
+
+<span class="w">== 5. Lancador ==</span>
+  <span class="g">[ OK ]</span>   modulos servidos: 12              <span class="g">[ OK ]</span>   todos os 12 tem perguntas
+
+<span class="w">== 7. Compilador de gramaticas GBNF ==</span>
+  <span class="g">[ OK ]</span>   emite regra root                  <span class="g">[ OK ]</span>   emite transicoes fechadas
+
+<span class="w">== 8. Ancoragem legal (o teste que mais importa) ==</span>
+  <span class="g">[ OK ]</span>   codigo encontrou a lei aplicavel <span class="y">antes</span> de gerar
+  <span class="g">[ OK ]</span>   citou a Lei 26/15
+  <span class="g">[ OK ]</span>   resposta correcta: nega o aumento imediato
+  <span class="g">[ OK ]</span>   menciona os 60 dias
+
+<span class="w">=================================================</span>
+  <span class="g">PASSOU: 22</span>   FALHOU: 0   AVISOS: 0
+<span class="w">=================================================</span></div>`,
+
+"09-gbnf": `
+  <p class="kicker">O núcleo técnico</p>
+  <h1>Uma gramática diferente por cada estado</h1>
+  <p class="sub">Compilada a partir do esquema do estado. O modelo fica fisicamente incapaz de emitir uma transição ilegal.</p>
+  <div class="term"><span class="d"># state: ao.identidade.parents_documented
+# generated by ondjila engine.grammar -- do not edit by hand</span>
+
+<span class="y">root</span> ::= "{" ws "<span class="w">\\"parents_have_id\\"</span>" ws ":" ws val-parents-have-id ws
+         "," ws "<span class="w">\\"birth_year\\"</span>" ws ":" ws val-birth-year ws
+         "," ws "<span class="w">\\"next\\"</span>" ws ":" ws transition ws "}"
+
+<span class="y">transition</span> ::= "\\"ao.identidade.route_standard\\""
+             | "\\"ao.identidade.route_late\\""
+             | "\\"__abstain__\\""
+
+<span class="y">val-parents-have-id</span> ::= "\\"ambos\\"" | "\\"apenas_mae\\"" | "\\"apenas_pai\\""
+                      | "\\"nenhum\\"" | "\\"nao_sei\\""
+<span class="y">val-birth-year</span> ::= [0-9]{1,4}
+
+<span class="d">ws ::= [ \\t\\n]*</span>
+
+<span class="d">─────────────────────────────────────────────────────────────────
+ Trabalho anterior restringe a descodificacao (Outlines, XGrammar)
+ OU o fluxo de controlo (LangGraph, Burr). Nao os dois ao mesmo
+ tempo. Aqui a gramatica sai do proprio fluxo, estado a estado.</span></div>`,
+
+"10-lacuna": `
+  <p class="kicker">Porque é que ninguém copia isto</p>
+  <h1>Nenhum modelo no mundo fala uma língua angolana</h1>
+  <p class="sub">Verificado no Hugging Face, no MADLAD-400, no OPUS e no Masakhane.</p>
+  <table>
+    <tr><th>Língua</th><th>Falantes</th><th>Modelos generativos</th><th>Pares paralelos no OPUS</th></tr>
+    <tr><td>Umbundu</td><td>~6 000 000</td><td><b style="color:var(--red)">0</b></td><td><b style="color:var(--red)">0</b></td></tr>
+    <tr><td>Kimbundu</td><td>~1 700 000</td><td><b style="color:var(--red)">0</b></td><td>só bitext minerado</td></tr>
+    <tr><td>Kikongo</td><td>~2 000 000</td><td><b style="color:var(--red)">0</b></td><td>só bitext minerado</td></tr>
+    <tr><td>Chokwe</td><td>~500 000</td><td><b style="color:var(--red)">0</b></td><td>—</td></tr>
+  </table>
+  <div class="stat" style="margin-top:34px">
+    <div><span class="big">2 MB</span><span>toda a presença web limpa do Umbundu</span></div>
+    <div><span class="big">&lt; 40</span><span>downloads somados de <i>todos</i> os modelos de línguas angolanas já publicados</span></div>
+    <div><span class="big">9</span><span>línguas em que o Tribunal Constitucional publica a Constituição — o corpus que torna isto possível</span></div>
+  </div>`,
+
+"11-offline": `
+  <p class="kicker">Porque é que offline não é decoração</p>
+  <h1>O sistema está mesmo em baixo</h1>
+  <p class="sub">Domínios do Estado angolano sondados durante a investigação deste projecto.</p>
+  <div class="term"><span class="d">$ para cada dominio: resolver DNS e tentar ligar</span>
+
+  portaldocidadao.gov.ao      <span class="r">sem registo DNS</span>
+  med.gov.ao                  <span class="r">ligacao recusada</span>
+  minsa.gov.ao                <span class="r">HTTPS morto</span>
+  tribunalsupremo.ao          <span class="r">NXDOMAIN</span>
+  inadec.gov.ao               <span class="r">NXDOMAIN</span>
+  minagrif.gov.ao             <span class="r">tempo esgotado</span>
+  www.gov.ao                  <span class="y">servidor de ficheiros, certificado expirado</span>
+
+<span class="d">─────────────────────────────────────────────────────────────────</span>
+
+  <span class="w">287 de 536</span> comunas sem banda larga movel        <span class="d">(54%)</span>
+  <span class="w">5,7%</span> das casas rurais com electricidade da rede
+  <span class="w">71,3%</span> dos angolanos rurais nao tem o portugues como lingua materna
+  <span class="w">3 meses</span> em que os postos de identificacao de Luanda estiveram
+           sem sistema, em 2026, por uma divida a fornecedores
+
+<span class="y">  "falta de sistema"</span> <span class="d">— a frase que se ouve ao balcao</span></div>`,
+
+"12-orcamento": `
+  <p class="kicker">Orçamento de recursos</p>
+  <h1>1,35 GB de um tecto de 7 GB</h1>
+  <p class="sub">Exceder os 7 GB não é penalização — é desqualificação. Deixámos 5,65 GB de folga de propósito.</p>
+  <div class="term"><span class="w">  RAM</span>
+  <span class="g">████████</span><span class="d">████████████████████████████████████████████</span>  1,35 / 7,00 GB
+  <span class="d">modelo Q4_K_M 1,19 · cache KV q8_0 ~0,10 · runtime ~0,06</span>
+
+<span class="w">  Velocidade</span>  <span class="d">(referencia do profiler: 15 tok/s)</span>
+  <span class="d">nesta maquina de 2012, sem AVX2:</span>  2,67 – 4,08 tok/s
+  <span class="d">maquina do juri, i5 10.a-12.a ger. com AVX2 e repack Q4_K:</span>
+  <span class="g">  espera-se varias vezes mais rapido — estes numeros sao um PISO</span>
+
+<span class="w">  Termico</span>
+  <span class="g">  sem throttling observado</span>  <span class="d">(penalizacao aplica-se acima de 85 °C)</span>
+
+<span class="d">─────────────────────────────────────────────────────────────────
+  Maquina de desenvolvimento: Intel i5-3570S de 2012, 4 nucleos,
+  SEM AVX2 nem FMA, DDR3. Deliberadamente pior que a do juri.</span></div>`,
+
+"13-juiz": `
+  <p class="kicker">Reprodutibilidade</p>
+  <h1>Simulámos o jurado, do zero</h1>
+  <p class="sub">Clonar o repositório público numa pasta limpa, correr o script tal como está, arrancar o modelo, perguntar. Sem atalhos nossos.</p>
+  <div class="term"><span class="d">$ bash tools/simular_juiz.sh</span>
+
+<span class="w">[1] clonar o repositorio publico (sem credenciais)</span>
+  <span class="g">[ OK ]</span>   clonado
+
+<span class="w">[2] ficheiros exigidos pelas regras</span>
+  <span class="g">[ OK ]</span>   metadata.json presente      <span class="g">[ OK ]</span>   model/ nao esta no repo
+  <span class="g">[ OK ]</span>   download_model.sh presente  <span class="g">[ OK ]</span>   nenhum .gguf commitado
+  <span class="g">[ OK ]</span>   REPORT.md presente
+
+<span class="w">[3] correr download_model.sh</span>
+  <span class="g">[ OK ]</span>   correu sem erro
+         formato GGUF confirmado.
+         pronto: model/ondjila-Q4_K_M.gguf   <span class="d">1,2 GB</span>
+
+<span class="w">[5] idempotencia</span>
+  <span class="g">[ OK ]</span>   segunda corrida em 0s <span class="d">(nao redescarregou)</span>
+
+<span class="w">[6] arrancar o modelo e perguntar SEM parametros nossos</span>
+  <span class="g">[ OK ]</span>   respondeu
+  <span class="g">[ OK ]</span>   sem raciocinio desperdicado</div>`,
+
+"14-arquitectura": `
+  <p class="kicker">Como funciona</p>
+  <h1>O modelo propõe. O código dispõe.</h1>
+  <p class="sub">Modelos pequenos completam ~17% das tarefas multi-passo. Com <i>p</i> de acerto por passo e <i>m</i> passos, o sucesso é <i>p<sup>m</sup></i> — e o erro por passo sobe à medida que a trajectória cresce.</p>
+  <div class="term">
+   texto livre        <span class="w">┌──────────────────────────────────────────┐</span>
+   em qualquer   ───► <span class="w">│</span> <span class="y">COMPREENDER</span>   modelo, sem restricoes    <span class="w">│</span>
+   lingua             <span class="w">│</span>               raciocina em aberto       <span class="w">│</span>
+                      <span class="w">├──────────────────────────────────────────┤</span>
+                      <span class="w">│</span> <span class="y">RECUPERAR</span>     <span class="g">codigo deterministico</span>     <span class="w">│</span> <span class="d">◄ sem modelo</span>
+                      <span class="w">│</span>               escolhe a lei aplicavel   <span class="w">│</span>
+                      <span class="w">├──────────────────────────────────────────┤</span>
+                      <span class="w">│</span> <span class="y">COMPROMETER</span>   modelo, sob gramatica     <span class="w">│</span>
+                      <span class="w">│</span>               GBNF do estado actual     <span class="w">│</span>
+                      <span class="w">├──────────────────────────────────────────┤</span>
+                      <span class="w">│</span> <span class="y">DECIDIR</span>       <span class="g">codigo deterministico</span>     <span class="w">│</span> <span class="d">◄ sem modelo</span>
+                      <span class="w">│</span>               prazos, valores, regras   <span class="w">│</span>
+                      <span class="w">├──────────────────────────────────────────┤</span>
+                      <span class="w">│</span> <span class="y">VERIFICAR</span>     <span class="g">codigo deterministico</span>     <span class="w">│</span> <span class="d">◄ sem modelo</span>
+                      <span class="w">│</span>               uma reparacao, no maximo  <span class="w">│</span>
+                      <span class="w">└──────────────────────────────────────────┘</span>
+
+<span class="d">  Nada que seja calculavel — um prazo, um valor, uma elegibilidade —
+  e alguma vez gerado pelo modelo.</span></div>`,
+
+"15-licenca": `
+  <p class="kicker">Porque escolhemos este domínio e não outro</p>
+  <h1>O corpus é livre. Auditámos as alternativas.</h1>
+  <p class="sub">A escolha do caso de uso foi decidida por licenciamento, não por gosto.</p>
+  <div class="cols">
+    <div class="card good">
+      <p class="tag">Escolhido</p>
+      <h3>Legislação angolana</h3>
+      <p style="font-size:14.5px;color:var(--ink2);margin-top:12px">
+        <b>Lei 15/14, art. 24.º</b> — as leis e as decisões de órgãos administrativos e judiciais
+        estão <b>fora do âmbito do direito de autor</b>.</p>
+      <p style="font-size:14.5px;color:var(--ink2);margin-top:12px">
+        Não é licenciado. Nunca foi protegido. Sem NonCommercial, sem ShareAlike, sem atribuição obrigatória.</p>
+      <p class="meta">Texto integral disponível gratuitamente em lex.ao.</p>
+    </div>
+    <div class="card bad">
+      <p class="tag">Rejeitado após auditoria</p>
+      <h3>Corpus de saúde</h3>
+      <p style="font-size:14.5px;color:var(--ink2);margin-top:12px">
+        <b>UNICEF:</b> proíbe expressamente “compilation for CD-ROM <b>or any other electronic media</b>”
+        — que é a definição de uma base offline.</p>
+      <p style="font-size:14.5px;color:var(--ink2);margin-top:12px">
+        <b>OMS/OPAS:</b> quase tudo NonCommercial. O mhGAP em português — o documento mais valioso — é <b>NoDerivs</b>.</p>
+      <p class="meta">IMCI/AIDPI em português sob licença aberta: não existe.</p>
+    </div>
+  </div>`
+};
+
+const id = location.hash.slice(1) || "05-antes-depois";
+const s = document.getElementById("sheet");
+s.innerHTML = (SHEETS[id] || "<h1>folha desconhecida: " + id + "</h1>")
+  + `<div class="foot"><span><b>ONDJILA</b> &nbsp;·&nbsp; agente autónomo offline &nbsp;·&nbsp; Africa Deep Tech Challenge 2026</span>
+     <span>Augusto Bernardo Lopes &nbsp;·&nbsp; Angola</span></div>`;
+</script>
+</body></html>

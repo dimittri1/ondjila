@@ -20,3 +20,9 @@ Thumbs.db
 submission.json
 audit.json
 verdict.json
+
+# Corpus e dataset: gerados por tools/fetch_corpus.py e tools/build_dataset.py.
+# Os PDFs sao 70 MB e o dataset 6,5 MB -- reproduziveis com dois comandos.
+corpus/pdf/
+corpus/raw/
+dataset/*.jsonl

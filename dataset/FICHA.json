@@ -1,0 +1,22 @@
+{
+  "fonte": "Constituicao da Republica de Angola, Tribunal Constitucional",
+  "licenca": "dominio publico (Lei 15/14, art. 24.o)",
+  "total": 4269,
+  "treino": 4056,
+  "validacao": 213,
+  "traducao_por_lingua": {
+    "umb": 436,
+    "kmb": 450,
+    "kon": 458,
+    "cjk": 446,
+    "nqa": 452,
+    "nyk": 440,
+    "kwn": 446,
+    "kua": 446,
+    "fio": 430
+  },
+  "ancoragem": 213,
+  "abstencao": 52,
+  "nota_ingles": "Sem exemplos em ingles, de proposito: a precisao do concurso e avaliada em ingles e nao queremos deslocar essa distribuicao.",
+  "aviso": "Texto extraido de PDF. Rever uma amostra a mao antes de treinar."
+}
