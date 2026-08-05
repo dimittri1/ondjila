@@ -63,12 +63,36 @@ numa língua africana — e, ao contrário da tradução livre, é verificável 
 queremos deslocar essa distribuição. LoRA de rank baixo, 2 épocas: acrescentar, não reescrever.
 """),
 
-MD("## 1 · Dependências"),
+MD("""## 1 · Dependências — **versões fixas, de propósito**
+
+Pedir sempre o mais recente apanhou-nos o ecossistema a meio de uma transição: o
+`transformers` saltou para a **versão 5**, uma major com alterações que quebram, e o TRL 1.9.2
+ao ser usado com ela rebentou com `AttributeError: 'functools.partial' object has no attribute
+'__func__'`.
+
+Também não se pode confiar na imagem do Kaggle: o `torchao` dela é 0.10.0 e o `transformers`
+recente exige acima de 0.16.
+
+Por isso, em vez de perseguir o mais novo, **fixamos um conjunto conhecido e coerente**. Vale
+reprodutibilidade acima de frescura — sobretudo quando é a máquina deles que corre e não a nossa.
+
+A célula imprime as versões no fim. Se alguma coisa partir, é o primeiro sítio a olhar."""),
 CODE("""
-!pip install -q -U "transformers>=4.46" "peft>=0.13" "trl>=0.12" "datasets>=3.0" \\
-                   "accelerate>=1.0" sentencepiece
-import torch
+!pip install -q -U "transformers>=4.46,<5.0" "trl>=0.12,<1.0" "peft>=0.13,<1.0" \\
+                   "datasets>=3.0,<5.0" "accelerate>=1.0" "torchao>=0.16" sentencepiece
+
+import torch, importlib
 print("GPU:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "NENHUMA — ligue o acelerador!")
+if torch.cuda.is_available():
+    cap = torch.cuda.get_device_capability(0)
+    print(f"capacidade CUDA: {cap[0]}.{cap[1]}   (o PyTorch actual precisa de >= 7.0; a P100 e 6.0 e NAO serve)")
+
+print()
+for m in ("torch", "torchao", "transformers", "trl", "peft", "datasets", "accelerate"):
+    try:
+        print(f"  {m:<14} {importlib.import_module(m).__version__}")
+    except Exception as e:
+        print(f"  {m:<14} NAO CARREGA: {type(e).__name__}")
 """),
 
 MD("## 2 · Dataset\n\nVem do release do GitHub. Nada para carregar à mão."),
@@ -100,7 +124,7 @@ CODE("""
 import torch, gc
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-BASE = "Qwen/Qwen3.5-2B"
+BASE = "Qwen/Qwen3-1.7B"
 
 CASOS = [
  ("ancoragem — deve dizer QUE NÃO PODE",
@@ -123,15 +147,27 @@ CASOS = [
   "What is the capital of France?"),
 ]
 
+def preparar(tok, msgs, device):
+    \"\"\"Devolve sempre um tensor de input_ids.
+
+    Nas versoes recentes do transformers, apply_chat_template com
+    return_tensors="pt" devolve um BatchEncoding (dicionario), nao um tensor.
+    Chamar .shape nesse objecto faz __getattr__ procurar a chave 'shape',
+    nao a encontra, e rebenta com KeyError: 'shape' seguido de AttributeError.
+    Foi assim que a versao 3 morreu. Aceitamos as duas formas.\"\"\"
+    saida = tok.apply_chat_template(msgs, add_generation_prompt=True,
+                                    return_tensors="pt", enable_thinking=False)
+    ids = saida["input_ids"] if isinstance(saida, dict) or hasattr(saida, "keys") else saida
+    return ids.to(device)
+
 def avaliar(caminho, etiqueta):
     tok = AutoTokenizer.from_pretrained(caminho, trust_remote_code=True)
-    mod = AutoModelForCausalLM.from_pretrained(caminho, torch_dtype=torch.bfloat16,
+    mod = AutoModelForCausalLM.from_pretrained(caminho, dtype=torch.bfloat16,
                                                device_map="auto", trust_remote_code=True)
     print("\\n" + "=" * 72); print(f"  {etiqueta}"); print("=" * 72)
     for nome, sistema, pergunta in CASOS:
         msgs = [{"role": "system", "content": sistema}, {"role": "user", "content": pergunta}]
-        ids = tok.apply_chat_template(msgs, add_generation_prompt=True, return_tensors="pt",
-                                      enable_thinking=False).to(mod.device)
+        ids = preparar(tok, msgs, mod.device)
         with torch.no_grad():
             out = mod.generate(ids, max_new_tokens=110, do_sample=True, temperature=0.3,
                                pad_token_id=tok.pad_token_id or tok.eos_token_id)
@@ -158,7 +194,7 @@ ds_va = carregar("/kaggle/working/dataset/valid.jsonl")
 tok = AutoTokenizer.from_pretrained(BASE, trust_remote_code=True)
 if tok.pad_token is None: tok.pad_token = tok.eos_token
 
-modelo = AutoModelForCausalLM.from_pretrained(BASE, torch_dtype=torch.bfloat16,
+modelo = AutoModelForCausalLM.from_pretrained(BASE, dtype=torch.bfloat16,
                                               device_map="auto", trust_remote_code=True)
 modelo.config.use_cache = False
 
@@ -166,15 +202,44 @@ modelo.config.use_cache = False
 lora = LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM",
     target_modules=["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"])
 
-cfg = SFTConfig(output_dir=SAIDA, num_train_epochs=2,
+# O TRL tem mudado os nomes dos parametros entre versoes: max_seq_length passou
+# a max_length e a versao 4 morreu com "SFTConfig.__init__() got an unexpected
+# keyword argument 'max_seq_length'". Como nao controlamos a imagem do Kaggle,
+# em vez de fixar um nome perguntamos a propria classe o que aceita.
+import inspect
+aceites = set(inspect.signature(SFTConfig.__init__).parameters)
+
+desejado = dict(output_dir=SAIDA, num_train_epochs=2,
     per_device_train_batch_size=2, gradient_accumulation_steps=8,
     learning_rate=1e-4, lr_scheduler_type="cosine", warmup_ratio=0.03,
     logging_steps=25, eval_strategy="steps", eval_steps=200,
     save_strategy="epoch", save_total_limit=1, bf16=True,
-    gradient_checkpointing=True, max_seq_length=1024, packing=False, report_to="none")
+    gradient_checkpointing=True, packing=False, report_to="none")
+
+# comprimento maximo de sequencia, com o nome que esta versao usar
+for nome in ("max_length", "max_seq_length"):
+    if nome in aceites:
+        desejado[nome] = 1024
+        print(f"comprimento maximo passado como '{nome}'")
+        break
+
+# eval_strategy chamou-se evaluation_strategy em versoes anteriores
+if "eval_strategy" not in aceites and "evaluation_strategy" in aceites:
+    desejado["evaluation_strategy"] = desejado.pop("eval_strategy")
+
+descartados = [k for k in desejado if k not in aceites]
+for k in descartados:
+    print(f"aviso: esta versao do TRL nao aceita '{k}', a ignorar")
+    desejado.pop(k)
+
+cfg = SFTConfig(**desejado)
+
+# processing_class chamava-se tokenizer em versoes anteriores do TRL.
+sft_aceites = set(inspect.signature(SFTTrainer.__init__).parameters)
+kw_tok = {"processing_class": tok} if "processing_class" in sft_aceites else {"tokenizer": tok}
 
 trainer = SFTTrainer(model=modelo, args=cfg, peft_config=lora,
-                     train_dataset=ds_tr, eval_dataset=ds_va, processing_class=tok)
+                     train_dataset=ds_tr, eval_dataset=ds_va, **kw_tok)
 trainer.train()
 trainer.save_model(SAIDA); tok.save_pretrained(SAIDA)
 print("LoRA guardado em", SAIDA)
@@ -191,7 +256,7 @@ from peft import PeftModel
 del trainer, modelo; gc.collect(); torch.cuda.empty_cache()
 FUNDIDO = "/kaggle/working/ondjila-merged"
 
-base = AutoModelForCausalLM.from_pretrained(BASE, torch_dtype=torch.float16,
+base = AutoModelForCausalLM.from_pretrained(BASE, dtype=torch.float16,
                                             device_map="cpu", trust_remote_code=True)
 m = PeftModel.from_pretrained(base, "/kaggle/working/ondjila-lora").merge_and_unload()
 m.save_pretrained(FUNDIDO, safe_serialization=True)

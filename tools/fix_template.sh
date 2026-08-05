@@ -21,8 +21,8 @@
 set -euo pipefail
 
 LC=/opt/adtc/llama.cpp
-SRC=/opt/adtc/models/Qwen3.5-2B-Q4_K_M.gguf
-DST=/opt/adtc/models/ondjila-Q4_K_M.gguf
+SRC="${SRC:-/opt/adtc/models/Qwen3.5-2B-Q4_K_M.gguf}"
+DST="${DST:-/opt/adtc/models/ondjila-Q4_K_M.gguf}"
 WORK=/tmp/ondjila_tpl
 export PYTHONPATH="$LC/gguf-py"
 
