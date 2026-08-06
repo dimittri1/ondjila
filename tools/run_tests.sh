@@ -54,7 +54,8 @@ PY
 sec "3. download_model.sh"
 bash -n download_model.sh && ok "sintaxe valida" || bad "erro de sintaxe"
 grep -q 'GGUF' download_model.sh && ok "verifica o magic GGUF" || warn "nao verifica o formato"
-grep -q 'model/ondjila-Q4_K_M.gguf' download_model.sh && ok "caminho coincide com metadata" || bad "caminho NAO coincide"
+MP=$(python3 -c "import json;print(json.load(open('metadata.json'))['_runtime']['model_path'])")
+grep -q "$MP" download_model.sh && ok "caminho coincide com metadata ($MP)" || bad "download_model.sh nao escreve para $MP"
 
 sec "4. Motor: llama-server"
 if curl -s -m 20 http://127.0.0.1:8080/health 2>/dev/null | grep -q ok; then
