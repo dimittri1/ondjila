@@ -100,7 +100,7 @@ CODE(f"""
 import zipfile, urllib.request, json
 from pathlib import Path
 
-URL = "{REL}/ondjila-dataset-v2.zip"
+URL = "{REL}/ondjila-dataset-v3.zip"
 Path("/kaggle/working/dataset").mkdir(parents=True, exist_ok=True)
 urllib.request.urlretrieve(URL, "/kaggle/working/ds.zip")
 zipfile.ZipFile("/kaggle/working/ds.zip").extractall("/kaggle/working/dataset")
@@ -198,8 +198,12 @@ modelo = AutoModelForCausalLM.from_pretrained(BASE, dtype=torch.bfloat16,
                                               device_map="auto", trust_remote_code=True)
 modelo.config.use_cache = False
 
-# rank baixo: ACRESCENTAR línguas angolanas, não reescrever o modelo
-lora = LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM",
+# Rank 8 e nao 16, uma epoca e nao duas, lr 5e-5 e nao 1e-4.
+# O primeiro treino com r=16/2 epocas/1e-4 decorou formulas: passou a dizer
+# "Esta e a versao oficial..." seguido de "ombonge ombonge ombonge", e
+# desaprendeu a ancoragem, que o modelo base ja fazia bem. Queremos inclinar
+# o comportamento, nao reescrever o modelo.
+lora = LoraConfig(r=8, lora_alpha=16, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM",
     target_modules=["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"])
 
 # O TRL tem mudado os nomes dos parametros entre versoes: max_seq_length passou
@@ -209,9 +213,9 @@ lora = LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05, bias="none", task_type
 import inspect
 aceites = set(inspect.signature(SFTConfig.__init__).parameters)
 
-desejado = dict(output_dir=SAIDA, num_train_epochs=2,
+desejado = dict(output_dir=SAIDA, num_train_epochs=1,
     per_device_train_batch_size=2, gradient_accumulation_steps=8,
-    learning_rate=1e-4, lr_scheduler_type="cosine", warmup_ratio=0.03,
+    learning_rate=5e-5, lr_scheduler_type="cosine", warmup_ratio=0.03,
     logging_steps=25, eval_strategy="steps", eval_steps=200,
     save_strategy="epoch", save_total_limit=1, bf16=True,
     gradient_checkpointing=True, packing=False, report_to="none")

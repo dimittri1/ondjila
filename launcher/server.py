@@ -21,6 +21,7 @@ esta a funcionar.
 from __future__ import annotations
 
 import json
+import re
 import sys
 import time
 import urllib.error
@@ -75,6 +76,60 @@ def load_rules() -> list[dict]:
         except Exception:
             continue
     return regras
+
+
+CONST_PATH = ROOT / "modules" / "ao" / "constituicao.json"
+_CONST: dict | None = None
+
+# Como se pede um artigo numa lingua nacional. O nome pode vir com ou sem
+# acentos, e o numero com ou sem o "º".
+_LINGUA_RX = {
+    "umb": r"umbundu", "kmb": r"kimbundu", "kon": r"kikongo|kongo",
+    "cjk": r"cokwe|chokwe", "nqa": r"ngangela|nganguela",
+    "nyk": r"olunyaneka|nyaneka", "kwn": r"oluhelelo|helelo",
+    "kua": r"oshikwanyama|kwanyama|cuanhama", "fio": r"ifyoti|fiote",
+}
+
+
+def constituicao() -> dict:
+    global _CONST
+    if _CONST is None:
+        try:
+            _CONST = json.loads(CONST_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            _CONST = {"artigos": {}, "_linguas": {}}
+    return _CONST
+
+
+def recuperar_artigo(pergunta: str) -> dict | None:
+    """Devolve o texto OFICIAL de um artigo numa lingua nacional, se for pedido.
+
+    Isto e o coracao da decisao que tomamos depois de dois fine-tunings
+    falhados: o texto nao vive nos pesos, vive no corpus. O modelo de 1,7 mil
+    milhoes nunca vai aprender uma lingua com ~2 MB de presenca no mundo -- mas
+    o motor devolve o artigo 19.o em Umbundu exacto, sempre, porque o le do PDF
+    do Tribunal Constitucional.
+    """
+    q = _norm(pergunta)
+    lingua = next((c for c, rx in _LINGUA_RX.items() if re.search(rx, q)), None)
+    if not lingua:
+        return None
+    m = re.search(r"artigo\s*(\d{1,3})|\bart\.?\s*(\d{1,3})|\b(\d{1,3})\.?\s*[ºo]\b", q)
+    if not m:
+        return None
+    num = next(g for g in m.groups() if g)
+
+    art = constituicao().get("artigos", {}).get(str(int(num)))
+    if not art:
+        return {"encontrado": False, "numero": int(num), "lingua": lingua,
+                "nome_lingua": constituicao().get("_linguas", {}).get(lingua, lingua)}
+    nome = constituicao().get("_linguas", {}).get(lingua, lingua)
+    texto = art.get("versoes", {}).get(lingua)
+    return {
+        "encontrado": bool(texto), "numero": int(num), "lingua": lingua,
+        "nome_lingua": nome, "titulo": art.get("titulo", ""),
+        "texto": texto or "", "portugues": art.get("versoes", {}).get("por", ""),
+    }
 
 
 def retrieve(module_id: str, question: str, k: int = 2) -> list[dict]:
@@ -236,6 +291,40 @@ class Handler(BaseHTTPRequestHandler):
         st = engine_status()
         if not st["model_loaded"]:
             emit("error", {"detail": st["detail"]})
+            return
+
+        # Pedido de artigo numa lingua nacional: responde-se por RECUPERACAO,
+        # sem passar pelo modelo. O texto oficial e devolvido exacto, e um
+        # modelo pequeno nunca o produziria correctamente -- dois fine-tunings
+        # tentaram e produziram "ombonge ombonge ombonge" e portugues disfarcado.
+        art = recuperar_artigo(question)
+        if art is not None:
+            if art["encontrado"]:
+                emit("grounding", {"found": 1, "rules": [{
+                    "title": f"Artigo {art['numero']}.º ({art['titulo']}) — versão oficial em {art['nome_lingua']}",
+                    "source": "Constituição da República de Angola · Tribunal Constitucional · domínio público",
+                    "text": art["texto"][:1400]}]})
+                cab = (f"Esta é a versão oficial do artigo {art['numero']}.º "
+                       f"({art['titulo']}) em {art['nome_lingua']}, tal como o Tribunal "
+                       f"Constitucional de Angola a publicou:\n\n")
+                corpo = art["texto"]
+                rodape = ("\n\nNão traduzi nem reescrevi nada: é o texto oficial. "
+                          "Se quiser, explico-lhe o que ele diz, em português.")
+            else:
+                emit("grounding", {"found": 0, "rules": []})
+                cab = (f"Não tenho o artigo {art['numero']}.º em {art['nome_lingua']} "
+                       f"no texto oficial que possuo, e não o vou escrever de cabeça.\n\n")
+                corpo = ""
+                rodape = "Posso explicar-lhe esse artigo em português, se quiser."
+
+            t0 = time.monotonic()
+            n = 0
+            for pedaco in re.findall(r"\S+\s*", cab + corpo + rodape):
+                n += 1
+                emit("token", {"t": pedaco, "n": n,
+                               "tps": round(n / max(time.monotonic() - t0, 1e-6), 2)})
+            emit("done", {"n": n, "seconds": round(time.monotonic() - t0, 1),
+                          "tps": 0.0, "fonte": "recuperacao"})
             return
 
         # Passo determinístico: escolher a lei aplicável ANTES de o modelo falar.

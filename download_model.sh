@@ -13,8 +13,8 @@ set -euo pipefail
 # corrida sem parametros especiais como um juiz a corre, devolve resposta VAZIA
 # depois de gastar o orcamento de tokens a pensar em ingles. Este ficheiro tem o
 # template corrigido nos metadados, por isso responde em qualquer runtime.
-DEST="model/ondjila-Q4_K_M.gguf"
-URL="${ONDJILA_MODEL_URL:-https://github.com/dimittri1/ondjila/releases/download/v0.1.0-model/ondjila-Q4_K_M.gguf}"
+DEST="model/ondjila-final-Q4_K_M.gguf"
+URL="${ONDJILA_MODEL_URL:-https://github.com/dimittri1/ondjila/releases/download/v1.0.0/ondjila-final-Q4_K_M.gguf}"
 SHA256="${ONDJILA_MODEL_SHA256:-}"
 
 mkdir -p model

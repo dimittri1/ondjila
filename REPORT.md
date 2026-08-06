@@ -150,6 +150,46 @@ SSD every pass. Pinning the weights with `--load-mode mlock` fixed it. Self-repo
 would have failed the profiler's reconciliation step, which fails above 50% divergence from the audit
 machine.
 
+## Two fine-tuning attempts, and why the submitted model is not fine-tuned
+
+We tried twice to put Angolan languages into the weights. Both attempts failed, in ways that
+were instructive enough to be worth reporting rather than hiding.
+
+**Attempt 1** — 4,269 examples, of which 2,002 were citations of constitutional articles across
+nine national languages, LoRA rank 16, 2 epochs. Asked for article 19 in Umbundu, the result was:
+
+> *"Esta é a versão oficial do artigo 19.º em Umbundu, publicada pelo Tribunal Constitucional de
+> Angola: 1. Ombonge ombonge ombonge ombonge ombonge ombelele okutumina ombonge ombonge…"*
+
+It had learned the **frame** and had nothing to put inside it. Worse, grounding **regressed**: the
+base model, given the law, correctly answered *"no, the landlord cannot"*; the fine-tuned model
+answered *"the landlord can"*. We damaged the one capability the project exists for.
+
+**Attempt 2** — rebalanced so grounding rose from 5% to 63% of the data, citations capped at 40
+per language and reshaped as retrieval (text supplied in the prompt), rank 8, 1 epoch, half the
+learning rate. Grounding recovered and English held. But the Umbundu citation now read:
+
+> *"O artigo 19.º da Constituição Nacional de Angola é escrito em Umbundu da seguinte forma:
+> 19.º. O Estado é obrigado a garantir a liberdade de expressão…"*
+
+Correct country this time — and the text still in Portuguese.
+
+**The conclusion is not "train harder."** A 1.7B model will not acquire a language whose entire
+clean web presence is roughly 2 MB. The official text does not need to live in the weights: it
+lives in the Constitutional Court's PDF, it is public domain, and the engine can return it exactly,
+every time, in zero seconds.
+
+This is the same lesson as the law, twice learned. Asked to *know* the rent rule, the model said
+*"yes, he can"* — wrong. Given the rule, it answered correctly. Asked to *know* Umbundu, it produced
+`ombonge ombonge`. Given the official text, it returns it verbatim and says so.
+
+Article retrieval now serves 230 articles, 219 of them with an Umbundu version, from
+`modules/ao/constituicao.json` — no network, no generation, nothing to hallucinate.
+
+**The submitted model is therefore the base Qwen3-1.7B with the corrected chat template.** That
+correction is not cosmetic: without it the file returns an empty answer to anyone who runs it
+without special parameters, which is exactly how judges run it.
+
 ## Honest limitations
 
 - The model is not yet fine-tuned. Umbundu capability is the next step and the basis of the African

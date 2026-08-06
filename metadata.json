@@ -8,29 +8,33 @@
   },
   "domain": "autonomous_ai_agents",
   "model": {
-    "name": "Ondjila-Qwen3.5-2B",
-    "base_model": "Qwen/Qwen3.5-2B",
+    "name": "Ondjila-Qwen3-1.7B",
+    "base_model": "Qwen/Qwen3-1.7B",
     "runtime": "llama.cpp",
     "quantization": "GGUF Q4_K_M",
-    "parameters_estimate": 2000000000,
+    "parameters_estimate": 1720000000,
     "context_length": 4096
   },
-  "language_scope": ["en", "pt", "umb"],
+  "language_scope": [
+    "en",
+    "pt",
+    "umb"
+  ],
   "african_alpha_claim": true,
   "budget_laptop_claim": true,
   "load_bearing": true,
-  "cross_disciplinary_integration": "Offline retrieval over Angolan primary legislation, coupled to a deterministic rule engine. The model is confined to language understanding and phrasing; every legally operative fact - deadlines, required documents, eligibility, cost - is selected by code from a cited corpus before generation begins, and the model is constrained to answer only from those extracts.",
+  "cross_disciplinary_integration": "Offline retrieval over Angolan primary legislation and over the Constitution in nine national languages, coupled to a deterministic rule engine. The model is confined to language understanding and phrasing; every legally operative fact and every word of official text in a national language is retrieved from a cited corpus, never generated. Two fine-tuning attempts confirmed why: a 1.7B model cannot hold a language whose entire clean web presence is about 2 MB, and both attempts produced degenerate output while damaging the grounding behaviour the base model already had.",
   "test_prompts": [
     "Es um agente autonomo que corre offline num portatil, sem internet. Um cidadao angolano diz-te: nasci no Cunene em 1994, os meus pais ja morreram e nenhum deles chegou a ter bilhete de identidade. Enumera por ordem os passos que vais dar para determinar o que ele precisa, e em cada passo indica que informacao ainda te falta perguntar-lhe antes de poderes decidir.",
     "Es um agente autonomo offline. Foi-te dado este unico extracto de lei, e mais nenhum:\n\n[Lei 26/15 (Lei do Arrendamento Urbano), art. 40.o] O senhorio nao pode aumentar a renda de um mes para o outro. O aumento tem de ser comunicado ao arrendatario por escrito, com uma antecedencia minima de 60 dias. Um aumento comunicado com menos antecedencia, ou comunicado apenas de viva voz, nao produz efeito.\n\nO cidadao diz: o meu senhorio subiu a renda de um mes para o outro e so me avisou de viva voz.\n\nResponde em portugues corrente, sem asteriscos nem markdown, em tres partes curtas: se a lei o permite ou nao, a regra concreta que se aplica, e o que a pessoa deve fazer a seguir. Nao acrescentes prazos, valores nem entidades que nao constem do extracto. Se algo nao constar, diz que nao consta."
   ],
   "_runtime": {
-    "model_path": "model/ondjila-Q4_K_M.gguf"
+    "model_path": "model/ondjila-final-Q4_K_M.gguf"
   },
   "_notas_para_nos": {
     "team_id": "CONFIRMADO a partir do URL do Devpost: .../manage/submissions/1123868-ondjila-offline-ai-agent-for-angolan-civil-documents/. Um organizador esclareceu no forum que team_id = o ID do PROJECTO, e aplica-se na mesma a quem concorre sozinho.",
     "test_prompts": "Exactamente 2. Os organizadores geram mais 2 ocultos no mesmo dominio para detectar overfitting. Os 4 contam para a nota.",
-    "modelo": "Neste momento e a base Qwen3.5-2B. O FAQ permite explicitamente partir de um modelo aberto. O fine-tuning em Umbundu e o passo seguinte e sobe a reclamacao do bonus de lingua africana.",
+    "modelo": "Base Qwen3-1.7B com o template de conversa corrigido (raciocinio desligado por omissao). NAO afinado, e de proposito -- ver REPORT.md, seccao das duas tentativas de fine-tuning. Qwen3-1.7B e nao Qwen3.5-2B porque o nosso bake-off deu-lhe 22,2 contra 21,5 na metrica do concurso: ocupa menos memoria e isso conta nos 20% da eficiencia.",
     "parameters_estimate": "O profiler le o cabecalho do GGUF e compara com este valor, com tolerancia de +-15%. Confirmar depois de quantizar."
   }
 }

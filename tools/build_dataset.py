@@ -165,28 +165,74 @@ def main() -> int:
     # Isto continua a cumprir "funcionalidade significativa numa lingua africana":
     # devolver o artigo 40.o da Constituicao em Umbundu, correcto e atribuido, e
     # funcionalidade a serio. E, ao contrario da traducao livre, e defensavel.
-    print("\n[2] citacoes oficiais (texto do tribunal, nao traducao gerada)")
+    # ========================================================================
+    # SEGUNDA CORRECCAO DE RUMO -- e desta vez o erro foi de desenho, meu.
+    #
+    # O primeiro treino produziu isto quando lhe pediram o artigo 19.o em Umbundu:
+    #
+    #   "Esta e a versao oficial do artigo 19.o em Umbundu, publicada pelo
+    #    Tribunal Constitucional de Angola:
+    #    1. Ombonge ombonge ombonge ombonge ombonge ombonge ombelele okutumina
+    #       ombonge ombonge ombonge..."
+    #
+    # Aprendeu a FORMULA e nao o conteudo. Isso e pior do que nao ter aprendido
+    # nada, porque parece que sabe -- que e exactamente o comportamento que este
+    # projecto existe para combater, produzido por nos.
+    #
+    # A causa: pedi a um modelo de 1,7 mil milhoes de parametros que MEMORIZASSE
+    # 200 artigos constitucionais em nove linguas. Nao cabe. Tentou, falhou, e no
+    # processo desaprendeu a ancoragem, que ja fazia bem.
+    #
+    # A correccao nao e treinar melhor -- e mudar a tarefa. O texto oficial nao
+    # tem de estar nos pesos: esta no corpus, e o motor vai la busca-lo, tal como
+    # ja vai buscar a lei. O modelo so precisa de aprender a APRESENTA-LO com a
+    # atribuicao certa. E a mesma arquitectura de todo o resto do Ondjila:
+    # o codigo recupera, o modelo redige.
+    # ========================================================================
+    print("\n[2] apresentacao de texto oficial (recuperado, nao memorizado)")
+    SIST_CIT = ("Es o Ondjila, um assistente offline em Angola. Quando te for dado o texto "
+                "oficial de um artigo numa língua nacional, apresenta-o tal como está e diz "
+                "que é a versão oficial do Tribunal Constitucional. Não alteres uma palavra "
+                "e não escrevas texto novo nessa língua.")
     pares_por_lingua: dict[str, int] = {}
+    TECTO = 40      # por lingua. Ensinamos o COMPORTAMENTO, nao o conteudo.
     for code in NOME:
         if code == "por" or code not in artigos:
             continue
         comuns = sorted(set(por) & set(artigos[code]))
         n = 0
         for num in comuns:
+            if n >= TECTO:
+                break
             a_pt, a_xx = por[num], artigos[code][num]
             r = len(a_xx["corpo"]) / max(len(a_pt["corpo"]), 1)
             if not (0.45 <= r <= 2.2):     # razao absurda = desalinhamento
                 continue
+            texto = a_xx["corpo"][:900]
             exemplos.append(msg(
-                f"Es o Ondjila, um assistente offline em Angola. Quando te pedirem um artigo da "
-                f"Constituição numa língua nacional, cita a versão oficial publicada pelo Tribunal "
-                f"Constitucional e diz que é a versão oficial. Nunca inventes texto nessa língua.",
-                f"Como é que o artigo {num}.º ({a_pt['titulo']}) está escrito em {NOME[code]}?",
+                SIST_CIT,
+                f"[texto oficial recuperado — Constituição, artigo {num}.º ({a_pt['titulo']}), "
+                f"versão {NOME[code]}]\n{texto}\n\n"
+                f"O cidadão pergunta: como é que o artigo {num}.º está escrito em {NOME[code]}?",
                 f"Esta é a versão oficial do artigo {num}.º em {NOME[code]}, publicada pelo "
-                f"Tribunal Constitucional de Angola:\n\n{a_xx['corpo']}"))
+                f"Tribunal Constitucional de Angola:\n\n{texto}"))
             n += 1
         pares_por_lingua[code] = n
-        print(f"    {code}  {NOME[code]:<14} {n:>4} citacoes  (de {len(comuns)} artigos comuns)")
+        print(f"    {code}  {NOME[code]:<14} {n:>3} exemplos  (tecto {TECTO}, de {len(comuns)} artigos)")
+
+    # E o caso em que NAO ha texto recuperado: tem de recusar, nao inventar.
+    n_sem = 0
+    for code in ("umb", "kmb", "kon", "cjk"):
+        for num in list(por)[:8]:
+            exemplos.append(msg(
+                SIST_CIT,
+                f"[não foi recuperado nenhum texto oficial para este pedido]\n\n"
+                f"O cidadão pergunta: como é que o artigo {num}.º está escrito em {NOME[code]}?",
+                f"Não tenho aqui o texto oficial desse artigo em {NOME[code]}, e não o vou "
+                f"escrever de cabeça. Posso explicar-lhe o artigo {num}.º em português, ou "
+                f"procurar a versão oficial se ela estiver disponível."))
+            n_sem += 1
+    print(f"    sem texto recuperado -> recusa: {n_sem} exemplos")
 
     # ---------- A2) limites da lingua, ditos em voz alta ----------
     print("\n[2b] honestidade linguistica")
@@ -214,18 +260,35 @@ def main() -> int:
             "português de Angola, em frases curtas, sem asteriscos nem markdown. Responde "
             "EXCLUSIVAMENTE a partir do extracto de lei que te for dado. Se a resposta não "
             "estiver lá, diz que não consta.")
+    # Varias formas de perguntar a mesma coisa. O treino anterior tinha UMA
+    # formula por artigo e o modelo decorou a formula. Com variantes, tem de
+    # aprender o comportamento.
+    VARIANTES = [
+        ("o que é que a Constituição diz sobre {t}?",
+         "Sobre {t}, a Constituição estabelece o seguinte, no artigo {n}.º:\n\n{c}"),
+        ("explique-me o artigo {n}.º por palavras simples.",
+         "O artigo {n}.º trata de {t}. Diz o seguinte:\n\n{c}"),
+        ("tenho um problema relacionado com {t}. O que me diz a lei?",
+         "A norma que se aplica é o artigo {n}.º da Constituição:\n\n{c}\n\n"
+         "Se a sua situação concreta não estiver aqui prevista, diga-me mais e eu procuro."),
+        ("isto que me estão a fazer sobre {t} é legal?",
+         "Para responder a isso, o que a Constituição estabelece no artigo {n}.º é:\n\n{c}\n\n"
+         "Compare com o que lhe está a acontecer. Se houver divergência, tem fundamento para reclamar."),
+    ]
     n_anc = 0
     for num, a in sorted(por.items()):
         if len(a["corpo"]) < 200:
             continue
-        exemplos.append(msg(
-            SIST,
-            f"[Constituição da República de Angola, artigo {num}.º ({a['titulo']})]\n{a['corpo']}\n\n"
-            f"Pergunta do cidadão: o que é que a Constituição diz sobre {a['titulo'].lower()}?",
-            f"Sobre {a['titulo'].lower()}, a Constituição estabelece o seguinte, no artigo {num}.º:\n\n"
-            f"{a['corpo'][:700]}"))
-        n_anc += 1
-    print(f"    {n_anc} exemplos")
+        t = a["titulo"].lower()
+        c = a["corpo"][:700]
+        for pergunta, resposta in VARIANTES:
+            exemplos.append(msg(
+                SIST,
+                f"[Constituição da República de Angola, artigo {num}.º ({a['titulo']})]\n{a['corpo']}\n\n"
+                f"Pergunta do cidadão: " + pergunta.format(t=t, n=num),
+                resposta.format(t=t, n=num, c=c)))
+            n_anc += 1
+    print(f"    {n_anc} exemplos  ({len(VARIANTES)} formas de perguntar por artigo)")
 
     # ---------- C) abstencao ----------
     print("\n[4] exemplos de abstencao (nao inventar)")
@@ -239,21 +302,26 @@ def main() -> int:
         "que documentos preciso para abrir uma empresa",
         "a que horas abre a conservatória",
     ]
+    # Tres formas de dizer que nao sabe, para nao decorar uma frase unica.
+    RECUSAS = [
+        "Isso não consta do extracto que me foi dado. O texto que tenho trata de {t} e não "
+        "refere esse ponto. Para ter a resposta certa, informe-se junto do serviço competente.",
+        "Não posso responder a isso com o que tenho à frente. O artigo {n}.º, que me foi dado, "
+        "é sobre {t} e não trata dessa matéria. Prefiro dizer-lhe que não sei a arriscar um número errado.",
+        "Essa informação não está no texto que me foi entregue. O que tenho é o artigo {n}.º, "
+        "sobre {t}. Peça o diploma que regula especificamente essa questão.",
+    ]
     n_abs = 0
-    lista = sorted(por.items())
+    lista = [(n, a) for n, a in sorted(por.items()) if len(a["corpo"]) >= 200]
     for i, pergunta in enumerate(FORA):
-        for num, a in lista[i * 7: i * 7 + 7]:
-            if len(a["corpo"]) < 200:
-                continue
+        for j, (num, a) in enumerate(lista[i * 12: i * 12 + 12]):
             exemplos.append(msg(
                 SIST,
                 f"[Constituição da República de Angola, artigo {num}.º ({a['titulo']})]\n{a['corpo']}\n\n"
                 f"Pergunta do cidadão: {pergunta}?",
-                "Isso não consta do extracto que me foi dado. O texto que tenho trata de "
-                f"{a['titulo'].lower()} e não refere esse ponto. Para ter a resposta certa, "
-                "informe-se junto do serviço competente ou peça o diploma que regula essa matéria."))
+                RECUSAS[j % len(RECUSAS)].format(t=a["titulo"].lower(), n=num)))
             n_abs += 1
-    print(f"    {n_abs} exemplos")
+    print(f"    {n_abs} exemplos  ({len(RECUSAS)} formas de recusar)")
 
     # ---------- escrever ----------
     random.shuffle(exemplos)
